@@ -26,7 +26,7 @@ def shop():
 
     while run_shop:
         screen.fill(MAIN_WINDOW_COLOR)
-
+        
         if PAGE1:     
             gap = 20
             for card in card_list:
@@ -39,26 +39,28 @@ def shop():
                 if skill.id != 6:
                     screen.blit(skill.image, (gap, 245))
                     gap += 270
-
             text_dynamite.text_draw(screen=screen)
             text_radar.text_draw(screen=screen) 
             text_missile.text_draw(screen=screen) 
             text_shield.text_draw(screen=screen) 
-            text_bomb.text_draw(screen=screen) 
+            text_bomb.text_draw(screen=screen)
+             
             
                 
         if PAGE2:
             screen.blit(card, (20, 230))
             screen.blit(image_torpedo, (32, 245))
-            text_torpedo .text_draw(screen=screen)
+            text_torpedo.text_draw(screen=screen)
         
         if PAGE3:
             print("PAGE3")
 
         
         position = pygame.mouse.get_pos()
+       
         press = pygame.mouse.get_pressed()
-        
+        if press:
+            print (position)
         pygame.draw.rect(screen, HEAD_COLOR, (0, 0, 1400, 150), 0)
         Armory_text.text_draw(screen = screen)
            
@@ -68,7 +70,11 @@ def shop():
         armory_page1.button_draw(screen = screen)
         armory_page2.button_draw(screen = screen)
         armory_page3.button_draw(screen = screen)
-        
+        #text_dynamite.text_draw(screen=screen)
+        #text_radar.text_draw(screen=screen) 
+        #text_missile.text_draw(screen=screen) 
+        #text_shield.text_draw(screen=screen) 
+        #text_bomb.text_draw(screen=screen)
         pygame.display.flip()
         clock.tick(60)
 

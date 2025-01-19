@@ -139,7 +139,7 @@ armory_page3 = Button(x = 1200, y = 50, width = 75, height = 75, text = " 3")
 
 class Text():
     '''
-    Створює текст за допомогою шрифтоф, які потрібно завантажити
+    Створює текст за допомогою шрифтiф, які потрібно завантажити
     '''
     
     def __init__(self, x, y, text, text_size = 20, color = MAIN_WINDOW_COLOR):
@@ -166,14 +166,17 @@ class Text():
         screen.blit(self.text, (self.x, self.y))
 
 settings_text = Text(x = 50, y = 100, text = "Settings", text_size=45)
+#
 Armory_text = Text(x = 50, y = 100, text = "Armory", text_size=45)
+#
 text_win = Text(x = 560, y = 320, text = "WIN", text_size=100, color="Red")
 text_lose = Text(x = 560, y = 320, text = "LOSE", text_size=100, color="Red")
-text_dynamite = Text(x = 0, y = 20, text = "Підриває все у формі +", text_size=45, color="Black")
-text_torpedo = Text(x = 30, y = 20, text = "Підриває 1 клітину на цілому рядку", text_size=45, color="Black")
-text_radar = Text(x = 60, y = 20, text = "Показує місце знаходження кораблів супротивника у радіусі 1 клітини", text_size=45, color="Black")
-text_missile = Text(x = 90, y = 20, text = "Підриває 1 корабель у радіусі 2 клітин", text_size=45, color="Black")
-text_shield = Text(x = 120, y = 20, text = "Ставить щит на корабель \n який захищає його від 1 попадання", text_size=45, color="Black")
-text_bomb= Text(x = 150, y = 20, text = "Підриває всі кораблі у радіусі 1 клітини", text_size=45, color="Black")
-
+###
+text_dynamite = Text(x = 315, y = 340, text = "Підриває все у формі +", text_size=10, color="Black")
+text_torpedo = Text(x = 45, y = 340, text = "Підриває 1 клітину на цілому рядку", text_size=10, color="Black")
+text_radar = Text(x = 585, y = 340, text = "Показує місце знаходження кораблів супротивника у радіусі 1 клітини", text_size=10, color="Black")
+text_missile = Text(x = 855, y = 340, text = "Підриває 1 корабель у радіусі 2 клітин", text_size=10, color="Black")
+text_shield = Text(x = 1125, y = 340, text = "Ставить щит на корабель \n який захищає його від 1 попадання", text_size=10, color="Black")
+text_bomb= Text(x = 45, y = 340, text = "Підриває всі кораблі у радіусі 1 клітини", text_size=10, color="Black")
+###
 skills_info_text = [text_dynamite, text_bomb, text_missile, text_radar, text_shield, text_torpedo]
