@@ -10,12 +10,13 @@ data = read_json(fd="settings.json")
 MAIN_WINDOW_COLOR = data["main"]["MAIN_WINDOW_COLOR"]
 FPS =  data["main"]["FPS"]
 
-server = False
 
 def wait_opponent():
     run_wait_opponent = True
     bg = pygame.image.load(os.path.abspath(__file__ + "/../../../image/bg/wait_for_opponent_bg.png"))
     bg = pygame.transform.scale(bg, [1400, 800])
+
+    server = True
 
     while run_wait_opponent:
         screen.fill(MAIN_WINDOW_COLOR)
@@ -39,9 +40,9 @@ def wait_opponent():
 
                 if create_server:
                     try:
+                        server = True
                         server_thread.start() 
                         print("Работаю одновременно с запуском сервера")
-                        server = True
                     except:
                         print("CThd")
                     

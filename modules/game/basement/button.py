@@ -117,29 +117,27 @@ your_ships = Button(x = 836 , y = 76, width = 430, height = 60, text = "Your shi
 
 button_ready = Button(x = 836, y = 630, width = 430, height = BUTTON_PLACEMENT_HEIGHT, text = "ready")
 #button_ready = Button(x = 970, y = 680, width = BUTTON_PLACEMENT_WIDTH, height = BUTTON_PLACEMENT_HEIGHT, text = "ready")
-
-
+#
+armory_page1 = Button(x = 1000, y = 50, width = 75, height = 75, text = " 1")
+armory_page2 = Button(x = 1100, y = 50, width = 75, height = 75, text = " 2")
+armory_page3 = Button(x = 1200, y = 50, width = 75, height = 75, text = " 3")
+#
 #Створення кнопок для екрану WAIT_OPPONENT
 join = Button(x = 1000, y = 600, width = 300, height = BUTTON_MENU_HEIGHT, text = "Join", text_size= 25)
 create = Button(x = 200, y = 600, width = 400, height = BUTTON_MENU_HEIGHT, text = "Create server", text_size= 25)
 
 #Створення кнопок для екрану BATTLE
-your_screen_text = Button(x = 70, y = 133, width = 604, height = 45, text = "Your screen", text_size = 18, button_color = BUTTON_DARKER_COLOR)
-enemy_screen_text = Button(x = 728, y = 133, width = 604, height = 45, text = "Enemy screen", text_size = 18, button_color = BUTTON_DARKER_COLOR)
+your_screen_text = Button(x = 70, y = 133, width = 604, height = 45, text = "         Your screen", text_size = 18, button_color = BUTTON_DARKER_COLOR)
+enemy_screen_text = Button(x = 725, y = 133, width = 604, height = 45, text = "Enemy screen", text_size = 18, button_color = BUTTON_DARKER_COLOR)
 
 c418 = Button(x = 350, y = 230, width = 500, height = 100, text = "c418", text_size = 18, button_color = BUTTON_DARKER_COLOR)
 new_year = Button(x = 350, y = 380, width = 500, height = 100, text = "new_year", text_size = 18, button_color = BUTTON_DARKER_COLOR)
 trolo = Button(x = 350, y = 530, width = 500, height = 100, text = "trolo", text_size = 18, button_color = BUTTON_DARKER_COLOR)
 rammstein = Button(x = 350, y = 680, width = 500, height = 100, text = "rammstein", text_size = 18, button_color = BUTTON_DARKER_COLOR) 
-#
-
-armory_page1 = Button(x = 1000, y = 50, width = 75, height = 75, text = " 1")
-armory_page2 = Button(x = 1100, y = 50, width = 75, height = 75, text = " 2")
-armory_page3 = Button(x = 1200, y = 50, width = 75, height = 75, text = " 3")
 
 class Text():
     '''
-    Створює текст за допомогою шрифтiф, які потрібно завантажити
+    Створює текст за допомогою шрифтоф, які потрібно завантажити
     '''
     
     def __init__(self, x, y, text, text_size = 20, color = MAIN_WINDOW_COLOR):
@@ -158,25 +156,57 @@ class Text():
         #шрифт тексту та його величина
         path_to_fonts = os.path.abspath(__file__+ "/../../../../fonts/")
         self.main_font = pygame.font.Font(path_to_fonts + "/m_font.ttf", self.text_size)
-        self.text = self.main_font.render(self.text, 1, self.color)
-    def text_draw(self, screen: object):
-        '''
-        Відмальовує на екрані по координатам -> (x,y)
-        '''
-        screen.blit(self.text, (self.x, self.y))
+        self.lines = self.text.split("\n")
+        self.rendered_lines = [self.main_font.render(line, True, self.color) for line in self.lines]
+
+    def text_draw(self, screen: pygame.Surface):
+        """
+        Відмальовує текст на екрані по координатам (x, y).
+        """
+        for index, line in enumerate(self.rendered_lines):
+            if index == 0:
+                screen.blit(line, (self.x, self.y))
+
+            if index == 1:
+                screen.blit(line, (self.x - 30, self.y + 25))
 
 settings_text = Text(x = 50, y = 100, text = "Settings", text_size=45)
-#
 Armory_text = Text(x = 50, y = 100, text = "Armory", text_size=45)
-#
 text_win = Text(x = 560, y = 320, text = "WIN", text_size=100, color="Red")
 text_lose = Text(x = 560, y = 320, text = "LOSE", text_size=100, color="Red")
-###
-text_dynamite = Text(x = 315, y = 340, text = "Підриває все у формі +", text_size=10, color="Black")
-text_torpedo = Text(x = 45, y = 340, text = "Підриває 1 клітину на цілому рядку", text_size=10, color="Black")
-text_radar = Text(x = 585, y = 340, text = "Показує місце знаходження кораблів супротивника у радіусі 1 клітини", text_size=10, color="Black")
-text_missile = Text(x = 855, y = 340, text = "Підриває 1 корабель у радіусі 2 клітин", text_size=10, color="Black")
-text_shield = Text(x = 1125, y = 340, text = "Ставить щит на корабель \n який захищає його від 1 попадання", text_size=10, color="Black")
-text_bomb= Text(x = 45, y = 340, text = "Підриває всі кораблі у радіусі 1 клітини", text_size=10, color="Black")
-###
-skills_info_text = [text_dynamite, text_bomb, text_missile, text_radar, text_shield, text_torpedo]
+#
+quasts1 = Text(x = 905, y = 90, text = "Kill three ships \n in a row", text_size=25)
+quasts2 = Text(x = 905, y = 90, text = "Detect ship by \n radar", text_size=25)
+quasts3 = Text(x = 905, y = 90, text = "Hit a torpedo \n twice in a row", text_size=25)
+quasts4 = Text(x = 905, y = 90, text = "Destroy the shield", text_size=25)
+quasts5 = Text(x = 905, y = 90, text = "Place two shields", text_size=25)
+quasts6 = Text(x = 905, y = 90, text = "Hit a single ship \n with a rocket", text_size=25)
+#
+quasts_list =[quasts1, quasts2, quasts3, quasts4, quasts5, quasts6]
+#
+text_dynamite = Text(x = 315, y = 340, text = "Destroys all ships \n   in plus form", text_size=10, color="Black")
+text_torpedo = Text(x = 45, y = 340, text = "Destroys 1 cell \n   in a row", text_size=10, color="Black")
+text_radar = Text(x = 585, y = 340, text = "Shows enemy ships \n   within a radius", text_size=10, color="Black")
+text_radar2 = Text(x = 585, y = 390, text = "of 1 cell", text_size=10, color="Black")
+text_missile = Text(x = 855, y = 340, text = "Destroys one ship \n   within a radius", text_size=10, color="Black")
+text_missile2 = Text(x = 855, y = 390, text = "of 1 cell", text_size=10, color="Black")
+text_shield = Text(x = 1125, y = 340, text = "Protects your ship \n   from 1 hit", text_size=10, color="Black")
+text_bomb= Text(x = 45, y = 340, text = "Blows up all ships \n   within 1 cell radius", text_size=10, color="Black")
+#
+title_dynamite = Text(x = 390, y = 270, text = "Dynamite", text_size=15, color="Black")
+title_torpedo = Text(x = 130, y = 270, text = "Torpedo", text_size=15, color="Black")
+title_radar = Text(x = 670, y = 270, text = "Radar", text_size=15, color="Black")
+title_missile = Text(x = 940, y = 270, text = "Missile", text_size=15, color="Black")
+title_shield = Text(x = 1210, y = 270, text = "Shield", text_size=15, color="Black")
+title_bomb= Text(x = 130, y = 270, text = "Bomb", text_size=15, color="Black")
+#
+price_dynamite = Text(x = 315, y = 220, text = "40", text_size=30, color="Black")
+price_torpedo = Text(x = 135, y = 220, text = "30", text_size=30, color="Black")
+price_radar = Text(x = 585, y = 220, text = "50", text_size=30, color="Black")
+price_missile = Text(x = 855, y = 220, text = "50", text_size=30, color="Black")
+price_shield = Text(x = 1125, y = 220, text = "40", text_size=30, color="Black")
+price_bomb= Text(x = 135, y = 220, text = "60", text_size=30, color="Black")
+
+
+skills_info_text = [text_dynamite, text_bomb, text_missile, text_radar, text_shield, text_torpedo, text_missile2, text_radar2]
+skills_title_text = [title_bomb, title_radar, title_missile, title_shield, title_bomb, title_torpedo]

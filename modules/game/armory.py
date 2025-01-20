@@ -20,6 +20,9 @@ def shop():
     card = pygame.image.load(os.path.abspath(__file__ + "/../../../image/skills/card.png"))
     card = pygame.transform.scale(card, [240, 380])
 
+    # image_point = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/point.png"))
+    # image_point = pygame.transform.scale(image_point, [35, 35])
+
     image_torpedo = skills_list[5].image
     
     card_list= [card, card, card, card, card]
@@ -37,20 +40,28 @@ def shop():
             gap = 32
             for skill in skills_list:
                 if skill.id != 6:
-                    screen.blit(skill.image, (gap, 245))
+                    screen.blit(skill.image, (gap, 243))
                     gap += 270
-            text_dynamite.text_draw(screen=screen)
-            text_radar.text_draw(screen=screen) 
-            text_missile.text_draw(screen=screen) 
-            text_shield.text_draw(screen=screen) 
-            text_bomb.text_draw(screen=screen)
-             
             
-                
+            text_dynamite.text_draw(screen= screen)
+            text_radar.text_draw(screen= screen) 
+            text_missile.text_draw(screen= screen) 
+            text_shield.text_draw(screen= screen) 
+            text_bomb.text_draw(screen= screen)
+            text_missile2.text_draw(screen= screen)
+            text_radar2.text_draw(screen= screen)
+            title_dynamite.text_draw(screen= screen)
+            title_radar.text_draw(screen= screen) 
+            title_missile.text_draw(screen= screen) 
+            title_shield.text_draw(screen= screen) 
+            title_bomb.text_draw(screen= screen)
+
         if PAGE2:
             screen.blit(card, (20, 230))
-            screen.blit(image_torpedo, (32, 245))
-            text_torpedo.text_draw(screen=screen)
+            screen.blit(image_torpedo, (32, 243))
+            
+            text_torpedo.text_draw(screen= screen)
+            title_torpedo.text_draw(screen= screen)
         
         if PAGE3:
             print("PAGE3")

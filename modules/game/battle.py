@@ -1,5 +1,6 @@
 import socket
-import pygame 
+import pygame
+import random
 import os
 import json
 
@@ -35,6 +36,9 @@ def battle():
     turn = False
     stop_thread = True
     run_battle = True
+    swich = True
+    swich_shark = True
+    swich_kraken = True
 
     clean_right_side = False
     clean_left_side = False
@@ -56,20 +60,28 @@ def battle():
 
     point = 0
 
-    Text_point = Text(x= 1050, y= 50, text = str(point), color= "Black", text_size= 50)
+    Text_point = Text(x= 800, y= 35, text = str(point), color= "Black", text_size= 50)
 
     buy = None
+
+    QUASTS= False
 
     #Наше поле (your screen)
     sq_your = pygame.Rect((70, 180, PLACE_LENGTH, PLACE_LENGTH))
     #Поле противника (enemy screen)
     sq_enemy = pygame.Rect((730, 180, PLACE_LENGTH, PLACE_LENGTH))
 
+    # image_point = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/point.png"))
+    # image_point = pygame.transform.scale(image_point, [10, 10])
+
     bg = pygame.image.load(os.path.abspath(__file__ + "/../../../image/bg/battle_field.png"))
     bg = pygame.transform.scale(bg, [PLACE_LENGTH, PLACE_LENGTH])
 
-    clean_bg = pygame.image.load(os.path.abspath(__file__ + "/../../../image/bg/clean_bg.png")).convert_alpha()
-    clean_bg = pygame.transform.scale(clean_bg, [PLACE_LENGTH, PLACE_LENGTH])
+    grey_bg = pygame.image.load(os.path.abspath(__file__ + "/../../../image/bg/grey_bg.png")).convert_alpha()
+    grey_bg = pygame.transform.scale(grey_bg, [1400, 800])
+
+    # clean_bg = pygame.image.load(os.path.abspath(__file__ + "/../../../image/bg/clean_bg.png")).convert_alpha()
+    # clean_bg = pygame.transform.scale(clean_bg, [PLACE_LENGTH, PLACE_LENGTH])
 
     frame= pygame.image.load(os.path.abspath(__file__ + "/../../../image/skills/sp_weapon_holder.png"))
     frame= pygame.transform.scale(frame, [85, 85])
@@ -83,6 +95,12 @@ def battle():
     shield = pygame.image.load(os.path.abspath(__file__ + "/../../../image/cell/shield_cell.png"))
     shield = pygame.transform.scale(shield, [60, 60])
 
+    assignments = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/quasts.png"))
+    assignments = pygame.transform.scale(assignments, [110, 110])
+
+    assignments_zone = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/quasts_rect.png"))
+    assignments_zone = pygame.transform.scale(assignments_zone, [504, 568])
+    
     radar_cell = pygame.image.load(os.path.abspath(__file__ + "/../../../image/cell/radar_cell.png"))
     radar_cell = pygame.transform.scale(radar_cell, [60, 60])
 
@@ -91,6 +109,37 @@ def battle():
 
     lamp_unactive = pygame.image.load(os.path.abspath(__file__ + "/../../../image/skills/lamp_unactive.png"))
     lamp_unactive = pygame.transform.scale(lamp_unactive, [60, 450])
+
+    win_medal = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/win.png"))
+    win_medal = pygame.transform.scale(win_medal, [80, 80])
+
+    lose_medal = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/lose.png"))
+    lose_medal = pygame.transform.scale(lose_medal, [80, 80])
+
+    check_quasts = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/check_quasts.png"))
+    check_quasts = pygame.transform.scale(check_quasts, [60, 60])
+
+    do_quasts = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/do_quasts.png"))
+    do_quasts = pygame.transform.scale(do_quasts, [60, 60])
+
+    # check_quasts_list = [check_quasts, check_quasts, check_quasts]
+
+    quasts_number = random.sample(range(6), k=3)
+
+    print(quasts_number)
+
+    for index, quasts in enumerate(quasts_list):
+        if quasts_number[1] == index:
+            quasts.y += 175
+
+        if quasts_number[2] == index:
+            quasts.y += 325
+
+    def add_medal(name):
+        name = pygame.image.load(os.path.abspath(__file__ + f"/../../../image/achievements/{name}.png"))
+        name = pygame.transform.scale(name, [55, 55])
+
+        return name
 
     sq_list = [sq_your,  sq_enemy]
 
@@ -136,9 +185,35 @@ def battle():
         Якщо їх нема, повертає `str`  
         '''
         
-        if all(cell != 1 for row in player_map1 for cell in row):
+        if all(cell != 1 and cell != 3 for row in player_map1 for cell in row):
             data_settings["main"]["GOLD"] += 25
             write_json(fd='settings.json', name_dict = data_settings)
+            for item in row_list_enemy:
+                item.CLOSE = False
+
+            for item in row_list_player:
+                item.CLOSE = False
+
+            for row in player_map2:
+                for i in range(len(row)):
+                    row[i] = 0
+            
+            print(player_map2)
+
+            
+            for row in player_map1:
+                for i in range(len(row)):
+                    row[i] = 0
+
+            print(player_map1)
+
+
+            miss_list.clear()
+            hit_list.clear()
+            shield_list.clear()
+            radar_point_list.clear()
+
+            client_socket.close()
             return "LOSE"
              
     def check_win() -> str:
@@ -146,9 +221,33 @@ def battle():
         Перевіряє наявність кораблів на матриці супротивника
         Якщо їх нема, повертає `str`  
         '''
-        if all(cell != 1 for row in player_map2 for cell in row):
+        if all(cell != 1 and cell !=3 for row in player_map2 for cell in row):
             data_settings["main"]["GOLD"] += 100
-            write_json(fd='settings.json', name_dict = data_settings)
+            for item in row_list_enemy:
+                item.CLOSE = False
+
+            for item in row_list_player:
+                item.CLOSE = False
+
+            for row in player_map2:
+                for i in range(len(row)):
+                    row[i] = 0
+            
+            print(player_map2)
+
+            
+            for row in player_map1:
+                for i in range(len(row)):
+                    row[i] = 0
+
+            print(player_map1)
+
+            miss_list.clear()
+            hit_list.clear()
+            shield_list.clear()
+            radar_point_list.clear()
+            
+            client_socket.close()
             return "WIN"
         
     def add_miss(list: list, number: int, place: int, operation: str) -> None:
@@ -543,7 +642,7 @@ def battle():
             if row != 3 and cell != 0:
                 add_miss(list, number, 41, "minus")
             
-            if row != 3 and cell != 0:
+            if row != 3 and cell != 9:
                 add_miss(list, number, 39, "minus")
                 
         elif shot_type == 20:
@@ -702,11 +801,16 @@ def battle():
                 elif next_cell <= 9 and list[row][next_cell] == 1:
                     print("RIGHT NEXT SHIP OUT")
                     return
+                elif new_cell <= 9 and list[row][new_cell] == 1:
+                    print(list[row][new_cell])
+                    print("RIGHT SHIP")
+                    return 
                 elif new_cell <= 9 and list[row][new_cell] == 0:
                     print(list[row][new_cell])
                     print("RIGHT CLEAN")
                     return ship_count
-                elif new_cell > 9:
+                elif new_cell >= 9:
+                    print(new_cell, next_cell)
                     print("RIGHT CLOSE")
                     return ship_count
                 
@@ -727,6 +831,9 @@ def battle():
                 elif next_cell >= 0 and list[row][new_cell] == 1:
                     print("Left NEXT SHIP OUT")
                     return
+                elif new_cell >= 0 and list[row][new_cell] == 1:
+                    print("Left CLEAN")
+                    return 
                 elif new_cell >= 0 and list[row][new_cell] == 0:
                     print("Left CLEAN")
                     return ship_count
@@ -752,6 +859,9 @@ def battle():
                 elif next_row <= 9 and list[next_row][cell] == 1:
                     print("Top NEXT SHIP OUT")
                     return
+                elif new_row <= 9 and list[new_row][cell] == 1:
+                    print("Top CLEAN")
+                    return 
                 elif new_row <= 9 and list[new_row][cell] == 0:
                     print("Top CLEAN")
                     return ship_count
@@ -776,6 +886,9 @@ def battle():
                 elif next_row >= 0 and list[next_row][cell] == 1:
                     print("DOWN NEXT SHIP OUT")
                     return
+                elif new_row >= 0 and list[new_row][cell] == 1:
+                    print("DOWN CLEAN")
+                    return 
                 elif new_row >= 0 and list[new_row][cell] == 0:
                     print("DOWN CLEAN")
                     return ship_count
@@ -839,11 +952,15 @@ def battle():
         # 3-6 36 four top ver
         # 3-7 37 four down ver
 
+        swich_shark = True
+        swich_kraken = True
+
         clean = radar(list, clean_side_list, row, cell, 0)
         ship = radar(list, ship_side_list, row, cell, 1)
         dead_ship = radar(list, dead_ship_side_list, row, cell, 2)
 
         if all(meaning for meaning in clean) or all(not meaning for meaning in ship) and all(not meaning for meaning in dead_ship):
+            data_settings["quasts"]["kill_ship"] += 1
             return 1
         
         if dead_ship[0] and dead_ship[1]:
@@ -852,14 +969,17 @@ def battle():
 
             if right == 2 and left == 2:
                 print("TRIO CENTER GOH")
+                data_settings["quasts"]["kill_ship"] += 1
                 return 20
             
             elif right == 2 and left == 3:
                 print("FOUR")
+                data_settings["quasts"]["kill_ship"] += 1
                 return 31
             
             elif right == 3 and left == 2:
                 print("FOUR 2")
+                data_settings["quasts"]["kill_ship"] += 1
                 return 30
             
         if dead_ship[2] and dead_ship[3]:
@@ -868,14 +988,17 @@ def battle():
 
             if down == 2 and top == 2:
                 print("TRIO CENTER VER")
+                data_settings["quasts"]["kill_ship"] += 1
                 return 23
             
             elif down == 2 and top == 3:
                 print("FOUR VER ")
+                data_settings["quasts"]["kill_ship"] += 1
                 return 35
             
             elif down == 3 and top == 2:
                 print("FOUR VER 2")
+                data_settings["quasts"]["kill_ship"] += 1
                 return 34
         
         for index, dead in enumerate(dead_ship) :
@@ -887,10 +1010,13 @@ def battle():
                 res = check_side(index, list, row, cell)
                 print(f"ship_count {res}")
                 if res == 2:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return  11               
                 elif res == 3:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 21               
                 elif res == 4:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return  32
 
 
@@ -898,10 +1024,13 @@ def battle():
                 res = check_side(index, list, row, cell)
                 print(f"ship_count {res}")
                 if res == 2:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return  11               
                 elif res == 3:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 21               
                 elif res == 4:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return  32
             
             ##########
@@ -910,20 +1039,26 @@ def battle():
                 res = check_side(index, list, row, cell)
                 print(f"ship_count {res}")
                 if res == 2:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 13                 
                 elif res == 3:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 22               
                 elif res == 4:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return  33
             
             if cell == 9 and dead and index == 1:
                 res = check_side(index, list, row, cell)
                 print(f"ship_count {res}")
                 if res == 2:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 13                 
                 elif res == 3:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 22               
                 elif res == 4:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return  33
             
             ##########
@@ -932,20 +1067,26 @@ def battle():
                 res = check_side(index, list, row, cell)
                 print("ship_count", res)
                 if res == 2:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 12                
                 elif res == 3:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 24               
                 elif res == 4:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return  36
 
             if row == 0 and dead and index == 2:
                 res = check_side(index, list, row, cell)
                 print("ship_count", res)
                 if res == 2:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 12                
                 elif res == 3:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 24               
                 elif res == 4:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return  36
             
             ##########
@@ -954,20 +1095,26 @@ def battle():
                 res = check_side(index, list, row, cell)
                 print("ship_count", res)
                 if res == 2:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 14                 
                 elif res == 3:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 25               
                 elif res == 4:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return  37
 
             if row == 9 and dead and index == 3:
                 res = check_side(index, list, row, cell)
                 print("ship_count", res)
                 if res == 2:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 14                 
                 elif res == 3:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return 25               
                 elif res == 4:
+                    data_settings["quasts"]["kill_ship"] += 1
                     return  37
         
         return 100
@@ -1100,7 +1247,7 @@ def battle():
                         elif coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map1[coordinate[0]][coordinate[1]] == 3:
                             print(coordinate[0], coordinate[1], player_map1[coordinate[0]][coordinate[1]])
                             player_map2[c_row][c_cell] = 1            
-
+                
                 if skill == 5:
                     # add_shield(row_list_enemy, number)
                     # shield_list.append(pygame.Rect(row_list_enemy[number].x, row_list_enemy[number].y ,60, 60))
@@ -1119,7 +1266,7 @@ def battle():
                 empty= 0
                 for item in row_list_player:
                     if empty == c_number:
-                        if c_type == 1 and skill != 1 and skill != 5 and skill != 55 and skill !=3:                    
+                        if c_type == 1 and skill != 1 and skill != 5 and skill != 55 and skill != 3 :                    
                             hit_list.append(pygame.Rect(item.x, item.y ,60, 60)) 
                             print(f"Изменение player_map2[{row}][{cell}] до: {player_map1[row][cell]}")
                             player_map1[c_row][c_cell] = 2
@@ -1131,7 +1278,7 @@ def battle():
                             if res == "LOSE":
                                 stop_thread = False
                         
-                        elif c_type == 0 and skill != 1 and skill != 5 and skill != 55 and skill !=3:
+                        elif c_type == 0 and skill != 1 and skill != 5 and skill != 55 and skill !=3 and skill != 4:
                             miss_list.append(pygame.Rect(item.x, item.y ,60, 60))  
                             print("miss")
 
@@ -1148,27 +1295,33 @@ def battle():
         ship.x += 3
         ship.y += 38
 
+    assignments_rect = pygame.Rect((1250, 20, 110, 110))
+    quasts_rect = pygame.Rect((870, 25, 504, 568))
+    
     while run_battle:    
-        screen.fill((MAIN_WINDOW_COLOR))
-
-        # screen.blit(clean_bg, (0, 0))
+        # screen.fill((MAIN_WINDOW_COLOR))
+        # pygame.draw.rect(screen, "Blue", assignments_rect)
+        
+        screen.blit(grey_bg, (0, 0))
+        
+        screen.blit(assignments, (1250, 20))
 
         if turn:
-            screen.blit(lamp_active, (5, 175))
-            screen.blit(lamp_unactive, (1335, 175))
+            screen.blit(lamp_active, (5, 125))
+            screen.blit(lamp_unactive, (1335, 125))
         
         if not turn:
-            screen.blit(lamp_unactive, (5, 175))
-            screen.blit(lamp_active, (1335, 175))
+            screen.blit(lamp_unactive, (5, 125))
+            screen.blit(lamp_active, (1335, 125))
 
         shot = True
 
         gap = 68
-        for i in range(0, 7):
+        for i in range(0, 6):
             screen.blit(frame, (gap, 12))
             gap += 120
 
-        Text_point = Text(x= 1300, y= 20, text = str(point), color= "Black", text_size= 50)
+        Text_point = Text(x= 800, y= 35, text = str(point), color= "Black", text_size= 50)
 
         Text_point.text_draw(screen=screen)
 
@@ -1210,7 +1363,7 @@ def battle():
             if player_map2[row][cell] == 0:
                 pygame.draw.rect(screen, BUTTON_COLOR, item)
             number2 += 1
-
+        
         for item in cell_list_enemy:
             pygame.draw.rect(screen, MAIN_WINDOW_COLOR, item)
             
@@ -1254,6 +1407,75 @@ def battle():
             skill.draw_skill(screen=screen)
             skill.move(position= position, press= press, screen= screen)
 
+        if QUASTS:
+            screen.blit(assignments_zone, (870, 25))
+
+        if data_settings["quasts"]["kill_ship"] < 5 and data_settings["quasts"]["kill_ship"] > 0:
+            if swich_shark:
+                medal = add_medal("iron_shark_medalka")
+                swich_shark = False
+            screen.blit(medal, (80, 110))
+
+        if data_settings["quasts"]["kill_ship"] < 15 and data_settings["quasts"]["kill_ship"] >= 5:
+            if swich_shark:
+                medal = add_medal("gold_shark_medalka")
+                swich_shark = False
+            screen.blit(medal, (80, 110))
+
+        if data_settings["quasts"]["kill_ship"] < 30 and data_settings["quasts"]["kill_ship"] >= 15:
+            if swich_shark:
+                medal = add_medal("diamond_shark_medalka")
+                swich_shark = False
+            screen.blit(medal, (80, 110))
+
+        if data_settings["quasts"]["kill_ship"] < 50 and data_settings["quasts"]["kill_ship"] >= 30:
+            if swich_shark:
+                medal = add_medal("ametyst_shark_medalka")
+                swich_shark = False
+            screen.blit(medal, (80, 110))
+
+        
+        if data_settings["quasts"]["kill_cell"] < 20 and data_settings["quasts"]["kill_cell"] > 10:
+            if swich_kraken:
+                medal_kraken = add_medal("iron_kraken_medalka")
+                swich_kraken = False
+            screen.blit(medal_kraken, (160, 110))
+
+        if data_settings["quasts"]["kill_cell"] < 35 and data_settings["quasts"]["kill_cell"] >= 20:
+            if swich_kraken:
+                medal_kraken = add_medal("gold_kraken_medalka")
+                swich_kraken = False
+            screen.blit(medal_kraken, (160, 110))
+
+        if data_settings["quasts"]["kill_cell"] < 65 and data_settings["quasts"]["kill_cell"] >= 35:
+            if swich_kraken:
+                medal_kraken = add_medal("diamond_kraken_medalka")
+                swich_kraken = False
+            screen.blit(medal_kraken, (160, 110))
+
+        if data_settings["quasts"]["kill_cell"] < 100 and data_settings["quasts"]["kill_cell"] >= 65:
+            if swich_kraken:
+                medal_kraken = add_medal("ametyst_kraken_medalka")
+                swich_kraken = False
+            screen.blit(medal_kraken, (160, 110))
+
+        if data_settings["quasts"]["win"] > 0:
+            screen.blit(win_medal, (240, 110))
+
+        if data_settings["quasts"]["lose"] > 0:
+            screen.blit(lose_medal, (300, 110))
+
+        if QUASTS:
+            for index, quasts in enumerate(quasts_list):
+                if quasts_number[0] == index:
+                    quasts.text_draw(screen= screen)
+
+                if quasts_number[1] == index:
+                    quasts.text_draw(screen= screen)
+
+                if quasts_number[2] == index:
+                    quasts.text_draw(screen= screen)
+        
         # print(clock.get_fps())
         
         pygame.display.flip()
@@ -1267,7 +1489,19 @@ def battle():
                         print("TAKE")   
                         skill.take() 
             
-            if event.type == pygame.MOUSEBUTTONUP and press[1]:             
+            if event.type == pygame.MOUSEBUTTONUP and not press[1] and not press[2]:     
+                if assignments_rect.collidepoint(position) and not QUASTS:
+                    print(data_settings["quasts"]["kill_ship"])
+                    print(data_settings["quasts"]["miss_cell"])
+                    print(data_settings["quasts"]["kill_cell"])
+                    print(data_settings["quasts"]["shield_cell"])
+                    print(data_settings["quasts"]["do_shield"])
+                    QUASTS = True
+
+                if not quasts_rect.collidepoint(position) and QUASTS:
+                    QUASTS = False
+                        
+            if event.type == pygame.MOUSEBUTTONUP and press[1] and not QUASTS:                 
                 for item in row_list_enemy:
                     row = number // 10
                     cell = number % 10
@@ -1277,13 +1511,13 @@ def battle():
                     
                     number += 1                    
             
-            if event.type == pygame.MOUSEBUTTONUP and press[0] and not press[1] and not press[2]:      
+            if event.type == pygame.MOUSEBUTTONUP and press[0] and not press[1] and not press[2] and not QUASTS:      
                 for skill in skills_list: 
                     if skill.plus_rect.collidepoint(position): 
                         buy = skill.plus(point) 
 
                         if buy:   
-                            point -= 20
+                            point -= skill.price
                     
                     if not sq_list[1].collidepoint(position) and not sq_list[0].collidepoint(position) and turn and not skill.TAKE:
                         print("OUT")
@@ -1303,6 +1537,8 @@ def battle():
 
                         if item.collidepoint(position) and sq_list[1].collidepoint(position) and turn and skill.TAKE and not item.CLOSE:
                             if skill.id == 1:
+                                skill.count -= 1
+                                skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
                                 print(f"ENEMY FEILD {skill.id}, {row}, {cell}")
                                 print("BomB")
 
@@ -1322,6 +1558,9 @@ def battle():
                                         map(row_list_enemy, coordinate[0], coordinate[1], num, shot_type)
 
                                         if first_cell:
+                                            swich_shark = True
+                                            swich_kraken = True
+                                            data_settings["quasts"]["kill_cell"] += 1
                                             print("RKTTTTTTTNRF")
                                             print(coordinate[0], coordinate[1], num, 1, 0, kill_type= shot_type)
                                             sending(coordinate[0], coordinate[1], num, 1, 0, kill_type= shot_type, skill= skill.id)
@@ -1348,6 +1587,9 @@ def battle():
                                         num = int(str(coordinate[0]) + str(coordinate[1]))
                                             
                                         if first_cell:
+                                            swich_shark = True
+                                            swich_kraken = True
+                                            data_settings["quasts"]["miss_cell"] += 1
                                             sending(coordinate[0], coordinate[1], num, 0, 1, kill_type = 10, skill= skill.id)
                                             first_cell = False 
 
@@ -1359,11 +1601,16 @@ def battle():
 
                                         player_map2[coordinate[0]][coordinate[1]] = 1
                                             
-                                        if first_cell:
+                                        if first_cell:                                          
+                                            swich_shark = True
+                                            swich_kraken = True
+                                            data_settings["quasts"]["shield_cell"] += 1
                                             sending(coordinate[0], coordinate[1], num, 3, 1, kill_type = 10, skill= skill.id)
                                             first_cell = False 
 
                             if skill.id == 2:
+                                skill.count -= 1
+                                skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
                                 print(f"ENEMY FEILD {skill.id}, {row}, {cell}")
                                 print("Dynamite")
 
@@ -1383,6 +1630,9 @@ def battle():
                                         map(row_list_enemy, coordinate[0], coordinate[1], num, shot_type)
 
                                         if first_cell:
+                                            swich_shark = True
+                                            swich_kraken = True
+                                            data_settings["quasts"]["kill_cell"] += 1
                                             turn = True
                                             print(coordinate[0], coordinate[1], num, 0, 1)
                                             sending(coordinate[0], coordinate[1], num, 1, 0, kill_type= shot_type, skill= skill.id)
@@ -1412,6 +1662,9 @@ def battle():
                                         row_list_enemy[num].CLOSE = True   
                                             
                                         if first_cell:
+                                            swich_shark = True
+                                            swich_kraken = True
+                                            data_settings["quasts"]["miss_cell"] += 1
                                             turn = False   
                                             sending(coordinate[0], coordinate[1], num, 0, 1, kill_type = 10, skill= skill.id)                           
                                             first_cell = False 
@@ -1427,11 +1680,16 @@ def battle():
                                         point += 5
                                             
                                         if first_cell:
+                                            swich_shark = True
+                                            swich_kraken = True
+                                            data_settings["quasts"]["shield_cell"] += 1
                                             turn = False   
                                             sending(coordinate[0], coordinate[1], num, 3, 1, kill_type = 10, skill= skill.id)                           
                                             first_cell = False 
                                                   
                             if skill.id == 3:
+                                skill.count -= 1
+                                skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
                                 print(f"ENEMY FEILD {skill.id}, {row}, {cell}")
                                 print("Radar")
 
@@ -1445,15 +1703,66 @@ def battle():
                                 sending(0, 0, 100, 0, 1, kill_type = 10, skill= skill.id)
                             
                             if skill.id == 4:
+                                skill.count -= 1
+                                skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
                                 print(f"ENEMY FEILD {skill.id}, {row}, {cell}")
                                 print("Rocet")
 
+                                first_cell = True
+                                
+                                rocket_list= [(row, cell), (row, cell- 1), (row, cell+ 1), (row- 1, cell), (row+ 1, cell), (row- 1, cell- 1), (row- 1, cell+ 1), (row+ 1, cell- 1), (row+ 1, cell+ 1),
+                                              (row + 2, cell), (row - 2, cell), (row, cell + 2), (row, cell - 2), 
+                                              (row + 2, cell + 1), (row - 2, cell + 1), (row + 1, cell + 2), (row + 1, cell - 2),
+                                              (row + 2, cell - 1), (row - 2, cell - 1), (row - 1, cell + 2), (row - 1, cell - 2)
+                                              ]
+                                
+                                for coordinate in rocket_list:
+                                    if coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map2[coordinate[0]][coordinate[1]] == 1 and first_cell:
+                                        data_settings["quasts"]["kill_cell"] += 1
+                                        first_cell = False
+                                        print(coordinate[0], coordinate[1], player_map2[coordinate[0]][coordinate[1]])
+                                        num = int(str(coordinate[0]) + str(coordinate[1]))
+                                        hit_list.append(pygame.Rect(row_list_enemy[num].x, row_list_enemy[num].y ,60, 60))   
+                                        player_map2[coordinate[0]][coordinate[1]] = 2
+                                        point += 10                   
+                                        row_list_enemy[num].CLOSE = True
+                                        
+                                        shot_type = new_finder(player_map2, coordinate[0], coordinate[1])
+                                        map(row_list_enemy, coordinate[0], coordinate[1], num, shot_type)
+
+                                        turn = False
+                                        swich_shark = True
+                                        swich_kraken = True
+                                        print(coordinate[0], coordinate[1], num, 0, 1)
+                                        sending(coordinate[0], coordinate[1], num, 1, 0, kill_type= shot_type, skill= skill.id)
+
+                                        print(f'Попал по кораблику')
+                                        shot = False
+                                        
+                                        res = check_win()
+                                        print(res)
+                                        if res == "WIN":
+                                            turn = False
+                                            run_battle = False
+                                            back = win()
+                                            if back == "BACK":
+                                                stop_thread = True
+                                                return "BACK"
+
+                                turn = False
+                                sending(0, 0, 100, 0, 1, kill_type = 10, skill= skill.id)
+
                             if skill.id == 6:
+                                skill.count -= 1
+                                skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
                                 print(f"ENEMY FEILD {skill.id}, {row}, {cell}")
                                 print("Topedo")
                                 for i in range(0, 10):
                                     print(player_map2[row][i], row, i)
                                     if player_map2[row][i] == 1 and shot:
+                                        swich_shark = True
+                                        swich_kraken = True
+                                        data_settings["quasts"]["kill_cell"] += 1
                                         num = int(str(row) + str(i))
                                         hit_list.append(pygame.Rect(row_list_enemy[num].x, row_list_enemy[num].y ,60, 60))   
                                         print(f"Изменение player_map2[{row}][{i}] до: {player_map2[row][i]}")
@@ -1481,6 +1790,9 @@ def battle():
                                                 return "BACK"
                                             
                                     if player_map2[row][i] == 3 and shot:
+                                        swich_shark = True
+                                        swich_kraken = True
+                                        data_settings["quasts"]["shield_cell"] += 1
                                         num = int(str(row) + str(i)) 
                                         print(f"Изменение player_map2[{row}][{i}] до: {player_map2[row][i]}")
                                         player_map2[row][i] = 1
@@ -1497,14 +1809,6 @@ def battle():
                                     turn = False   
                                     sending(0, 0, 100, 0, 1, kill_type = 10)
                             
-                            # if skill.id == 7:
-                            #     print(f"ENEMY FEILD {skill.id}, {row}, {cell}")
-                            #     print("Unfore")
-
-                            # if skill.id == 8:
-                            #     print(f"ENEMY FEILD {skill.id}, {row}, {cell}")
-                            #     print("Flamethower")
-                            
                             shot = False
 
                         number += 1
@@ -1516,10 +1820,15 @@ def battle():
 
                         if item.collidepoint(position) and sq_list[0].collidepoint(position) and turn and skill.TAKE and not item.CLOSE:
                             if skill.id == 5:
+                                skill.count -= 1
+                                skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
                                 print(f"ENEMY FEILD {skill.id}, {row}, {cell}")
                                 print("Sild")
                                 
                                 if player_map1[row][cell] == 1:
+                                    swich_shark = True
+                                    swich_kraken = True
+                                    data_settings["quasts"]["do_shield"] += 1
                                     add_shield(row_list_player, number)
                                     shield_list.append(pygame.Rect(item.x, item.y ,60, 60))
                                     player_map1[row][cell] = 3
@@ -1539,6 +1848,9 @@ def battle():
                         row = number // 10           
 
                         if item.collidepoint(position) and sq_list[1].collidepoint(position) and player_map2[row][cell] == 1 and not item.CLOSE and turn: 
+                            swich_shark = True
+                            swich_kraken = True
+                            data_settings["quasts"]["kill_cell"] += 1
                             hit_list.append(pygame.Rect(item.x, item.y ,60, 60))   
                             print(f"Изменение player_map2[{row}][{cell}] до: {player_map2[row][cell]}")
                             player_map2[row][cell] = 2
@@ -1562,6 +1874,9 @@ def battle():
                                     return "BACK"
                 
                         elif item.collidepoint(position) and sq_list[1].collidepoint(position) and player_map2[row][cell] == 0 and not item.CLOSE and turn:
+                            swich_shark = True
+                            swich_kraken = True
+                            data_settings["quasts"]["miss_cell"] += 1
                             miss_list.append(pygame.Rect(item.x, item.y, 60, 60))
                             print("Поле врага: Не попал", row , cell , player_map2[row][cell])
                             point += 2
@@ -1571,6 +1886,9 @@ def battle():
                             sending(row, cell, number, 0, 1, kill_type = 100)  
 
                         elif item.collidepoint(position) and sq_list[1].collidepoint(position) and player_map2[row][cell] == 3 and not item.CLOSE and turn:
+                            swich_shark = True
+                            swich_kraken = True
+                            data_settings["quasts"]["shield_cell"] += 1
                             print("Щитттттттттттт")
                             print("Поле врага: Не попал", row , cell , player_map2[row][cell])
                             player_map2[row][cell] = 1
@@ -1595,13 +1913,25 @@ def battle():
             shot = True
 
             if event.type == pygame.QUIT:
+                client_socket.close()
                 run_battle = False
                 pygame.quit()
 
 def win():
+    for ship in ship_list:
+        ship.x = ship.start_x
+        ship.y = ship.start_y
+        ship.DIR = True
 
+    for skill in skills_list:
+        skill.count = 0
+        skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
 
     run_win = True
+    print(data_settings["quasts"]["win"])
+    data_settings["quasts"]["win"] += 1
+
+    print(data_settings["quasts"]["win"])
 
     while run_win:
         screen.fill((MAIN_WINDOW_COLOR))
@@ -1628,7 +1958,23 @@ def win():
                 pygame.quit()
 
 def lose():
+    for ship in ship_list:
+        ship.x = ship.start_x
+        ship.y = ship.start_y
+        ship.DIR = True
+
+    for skill in skills_list:
+        skill.count = 0
+        skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
+    
     run_lose =True
+
+    print(data_settings["quasts"]["lose"])
+    
+    data_settings["quasts"]["lose"] += 1
+
+    print(data_settings["quasts"]["lose"])
+    
     while run_lose:
         screen.fill((MAIN_WINDOW_COLOR))
         

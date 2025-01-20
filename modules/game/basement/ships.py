@@ -1,6 +1,3 @@
-'''
-Цей модуль допомагає створювати кораблі
-'''
 import pygame
 import os
 
@@ -28,10 +25,6 @@ class RectBetter(pygame.Rect):
             )
 
 class Ships():
-    '''
-    Цей клас створює кораблі різних розмірів 
-    За розмір відповідає змінна `count_length`
-    '''
     def __init__ (self, x: int, y: int, count_length: int, id : int):
         self.x = x
         self.y = y
@@ -60,11 +53,6 @@ class Ships():
         self.load()
 
     def search_abs_path(self, DIR):
-        '''
-        Знаходить абсолютний шлях до спрайту корабля
-        `self.count_length` -> Відповідає за розмір корабля
-        `DIR` -> відповідає за напрям корабля (горизонтально або вертикально)
-        '''
         path = os.path.abspath(__file__ + f"/../../../../image/ship/{self.count_length}-SHIP-{DIR}.png")
         return path
 
