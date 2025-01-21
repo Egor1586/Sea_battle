@@ -176,8 +176,12 @@ settings_text = Text(x = 50, y = 100, text = "Settings", text_size=45)
 Armory_text = Text(x = 50, y = 100, text = "Armory", text_size=45)
 text_win = Text(x = 560, y = 320, text = "WIN", text_size=100, color="Red")
 text_lose = Text(x = 560, y = 320, text = "LOSE", text_size=100, color="Red")
+
+quasts1_price = Text(x = 965, y = 170, text = "45", text_size=35, color="Black")
+quasts2_price = Text(x = 965, y = 345, text = "45", text_size=35, color="Black")
+quasts3_price = Text(x = 965, y = 500, text = "45", text_size=35, color="Black")
 #
-quasts1 = Text(x = 905, y = 90, text = "Kill three ships \n in a row", text_size=25)
+quasts1 = Text(x = 905, y = 90, text = "Kill four ships \n in a row", text_size=25)
 quasts2 = Text(x = 905, y = 90, text = "Detect ship by \n radar", text_size=25)
 quasts3 = Text(x = 905, y = 90, text = "Hit a torpedo \n twice in a row", text_size=25)
 quasts4 = Text(x = 905, y = 90, text = "Destroy the shield", text_size=25)

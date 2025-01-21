@@ -29,16 +29,14 @@ def battle():
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     ]
-
-    # def thread_animation():
-    #     pass
-
-    # animation_thread = Thread(target = thread_animation) 
-    # animation_thread.start()
     
     global turn
     global run_battle
     global stop_thread
+
+    quasts1_point = False
+    quasts2_point = False
+    quasts3_point = False
 
     turn = False
     stop_thread = True
@@ -94,6 +92,8 @@ def battle():
 
     image_point = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/point.png"))
     image_point = pygame.transform.scale(image_point, [150, 90])
+
+    image_point_small = pygame.transform.scale(image_point, [75, 45])
 
     bg = pygame.image.load(os.path.abspath(__file__ + "/../../../image/bg/battle_field.png"))
     bg = pygame.transform.scale(bg, [PLACE_LENGTH, PLACE_LENGTH])
@@ -309,6 +309,8 @@ def battle():
         
         if shot_type == 100:
             print("miss")  
+
+        data_settings["quasts_do"]["quasts0"] += 1
 
         if shot_type == 21: 
             print("trio left goh")   
@@ -1247,7 +1249,7 @@ def battle():
                                 run_battle = False
                                 back = win()
                                 if back == "BACK":
-                                    stop_thread = True
+                                    stop_thread = False
                                     return "BACK"
 
                         elif coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map1[coordinate[0]][coordinate[1]] == 0:
@@ -1279,7 +1281,7 @@ def battle():
                                 run_battle = False
                                 back = win()
                                 if back == "BACK":
-                                    stop_thread = True
+                                    stop_thread = False
                                     return "BACK"
 
                         elif coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map1[coordinate[0]][coordinate[1]] == 0:
@@ -1353,12 +1355,15 @@ def battle():
         screen.blit(assignments, (1250, 20))
 
         if point < 10:
+            Text_point = Text(x= 870, y= 45, text = str(point), color= "Black", text_size= 50)  
             screen.blit(image_point,(920, 20))
 
         if point > 9 and point < 100:
+            Text_point = Text(x= 870, y= 45, text = str(point), color= "Black", text_size= 50)  
             screen.blit(image_point,(970, 20))
 
         if point > 99:
+            Text_point = Text(x= 870, y= 45, text = str(point), color= "Black", text_size= 50)  
             screen.blit(image_point,(1020, 20))
 
         if turn:
@@ -1438,13 +1443,13 @@ def battle():
                     ship.ship_draw(screen= screen)  
             number1 += 1
 
-        number2 = 0 
-        for item in row_list_enemy:
-            cell = number2 % 10
-            row = number2 // 10
-            if player_map2[row][cell] == 1:
-                pygame.draw.rect(screen, "green", item)
-            number2 += 1
+        # number2 = 0 
+        # for item in row_list_enemy:
+        #     cell = number2 % 10
+        #     row = number2 // 10
+        #     if player_map2[row][cell] == 1:
+        #         pygame.draw.rect(screen, "green", item)
+        #     number2 += 1
         
         for item in miss_list:
             screen.blit(miss, (item.x, item.y))
@@ -1461,9 +1466,6 @@ def battle():
         for skill in skills_list:
             skill.draw_skill(screen=screen)
             skill.move(position= position, press= press, screen= screen)
-
-        if QUASTS:
-            screen.blit(assignments_zone, (870, 25))
 
         if data_settings["quasts"]["kill_ship"] < 5 and data_settings["quasts"]["kill_ship"] > 0:
             if swich_shark:
@@ -1520,9 +1522,16 @@ def battle():
             screen.blit(lose_medal, (300, 110))
 
         if QUASTS:
+            screen.blit(assignments_zone, (870, 25))
+
+            screen.blit(image_point_small, (1035, 163))
+            screen.blit(image_point_small, (1035, 338))
+            screen.blit(image_point_small, (1035, 500))
+            
             for index, quasts in enumerate(quasts_list):                               
                 if quasts_number[0] == index:
                     quasts.text_draw(screen= screen)
+                    quasts1_price.text_draw(screen= screen)
                     if not quasts_do_list[index]:
                         screen.blit(check_quasts, (900, 155))
                     if  quasts_do_list[index]:
@@ -1530,6 +1539,7 @@ def battle():
 
                 if quasts_number[1] == index:
                     quasts.text_draw(screen= screen)
+                    quasts2_price.text_draw(screen= screen)
                     if not quasts_do_list[index]:
                         screen.blit(check_quasts, (900, 330))
                     if  quasts_do_list[index]:
@@ -1537,6 +1547,7 @@ def battle():
 
                 if quasts_number[2] == index:
                     quasts.text_draw(screen= screen)
+                    quasts3_price.text_draw(screen= screen)
                     if not quasts_do_list[index]:
                         screen.blit(check_quasts, (900, 490))
                     if  quasts_do_list[index]:
@@ -1557,7 +1568,7 @@ def battle():
             
             if event.type == pygame.MOUSEBUTTONUP and not press[1] and not press[2]:     
                 if assignments_rect.collidepoint(position) and not QUASTS:
-                    if data_settings["quasts_do"]["quasts0"] >= 3:
+                    if data_settings["quasts_do"]["quasts0"] >= 4:
                         quasts_do_list[0] = True
                         print(quasts_do_list[0])
 
@@ -1581,15 +1592,31 @@ def battle():
                         quasts_do_list[5] = True
                         print(quasts_do_list[5])
 
-                    for numbeer in range(6):
-                        print(data_settings["quasts_do"][f"quasts{numbeer}"])
+                    for number in range(6):
+                        if quasts_do_list[number] == True and quasts_number[0] == number and not quasts1_point:
+                            point += 45
+                            Text_point = Text(x= 870, y= 45, text = str(point), color= "Black", text_size= 50)
+                            quasts_do_list[number] = True
+                            quasts1_point = True
+
+                        if quasts_do_list[number] == True and quasts_number[1] == number and not quasts2_point:
+                            point += 45
+                            Text_point = Text(x= 870, y= 45, text = str(point), color= "Black", text_size= 50)
+                            quasts_do_list[number] = True
+                            quasts2_point = True
+
+                        if quasts_do_list[number] == True and quasts_number[2] == number and not quasts3_point:
+                            point += 45
+                            Text_point = Text(x= 870, y= 45, text = str(point), color= "Black", text_size= 50)
+                            quasts_do_list[number] = True
+                            quasts3_point = True
 
                     QUASTS = True
 
                 if not quasts_rect.collidepoint(position) and QUASTS:
                     QUASTS = False
                         
-            if event.type == pygame.MOUSEBUTTONUP and press[1] and not QUASTS:                 
+            if event.type == pygame.MOUSEBUTTONUP and press[1] and not QUASTS:              
                 for item in row_list_enemy:
                     row = number // 10
                     cell = number % 10
@@ -1599,7 +1626,7 @@ def battle():
                     
                     number += 1                    
             
-            if event.type == pygame.MOUSEBUTTONUP and press[0] and not press[1] and not press[2] and not QUASTS:      
+            if event.type == pygame.MOUSEBUTTONUP and press[0] and not press[1] and not press[2] and not QUASTS:     
                 for skill in skills_list: 
                     if skill.plus_rect.collidepoint(position): 
                         buy = skill.plus(point) 
@@ -1608,12 +1635,8 @@ def battle():
                             point -= skill.price
                     
                     if not sq_list[1].collidepoint(position) and not sq_list[0].collidepoint(position) and turn and not skill.TAKE:
-                        print("OUT")
-                        print(skill.rect_x, skill.rect_y)
-                        print(skill.x,skill.y)
                         skill.rect_x = skill.x
                         skill.rect_y = skill.y
-                        print("STOP")
                         skill.OUT = True
                         skill.TAKE = False 
 
@@ -1664,10 +1687,11 @@ def battle():
                                             run_battle = False
                                             back = win()
                                             if back == "BACK":
-                                                stop_thread = True
+                                                stop_thread = False
                                                 return "BACK"
 
                                     elif coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map2[coordinate[0]][coordinate[1]] == 0:
+                                        data_settings["quasts_do"]["quasts0"] = 0
                                         print(coordinate[0], coordinate[1], player_map2[coordinate[0]][coordinate[1]])
                                         turn = False
 
@@ -1682,6 +1706,7 @@ def battle():
                                             first_cell = False 
 
                                     elif coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map2[coordinate[0]][coordinate[1]] == 3:
+                                        data_settings["quasts_do"]["quasts0"] = 0
                                         data_settings["quasts_do"]["quasts3"] += 1
                                         print(coordinate[0], coordinate[1], player_map2[coordinate[0]][coordinate[1]])
                                         turn = False
@@ -1741,11 +1766,11 @@ def battle():
                                             run_battle = False
                                             back = win()
                                             if back == "BACK":
-                                                stop_thread = True
+                                                stop_thread = False
                                                 return "BACK"
 
                                     elif coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map2[coordinate[0]][coordinate[1]] == 0:
-                                        print(coordinate[0], coordinate[1], player_map2[coordinate[0]][coordinate[1]])
+                                        data_settings["quasts_do"]["quasts0"] = 0
 
                                         num = int(str(coordinate[0]) + str(coordinate[1]))
                                         miss_list.append(pygame.Rect(row_list_enemy[num].x, row_list_enemy[num].y, 60, 60))
@@ -1763,6 +1788,7 @@ def battle():
                                             first_cell = False 
 
                                     elif coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map2[coordinate[0]][coordinate[1]] == 3:
+                                        data_settings["quasts_do"]["quasts0"] = 0
                                         data_settings["quasts_do"]["quasts3"] += 1
                                         print(coordinate[0], coordinate[1], player_map2[coordinate[0]][coordinate[1]])
 
@@ -1847,11 +1873,12 @@ def battle():
                                             run_battle = False
                                             back = win()
                                             if back == "BACK":
-                                                stop_thread = True
+                                                stop_thread = False
                                                 return "BACK"
 
                                 turn = False
                                 sound_miss.play()
+                                data_settings["quasts_do"]["quasts0"] = 0
                                 sending(0, 0, 100, 0, 1, kill_type = 10, skill= skill.id)
 
                             if skill.id == 6:
@@ -1889,10 +1916,11 @@ def battle():
                                             run_battle = False
                                             back = win()
                                             if back == "BACK":
-                                                stop_thread = True
+                                                stop_thread = False
                                                 return "BACK"
                                             
                                     if player_map2[row][i] == 3 and shot:
+                                        data_settings["quasts_do"]["quasts0"] = 0
                                         data_settings["quasts_do"]["quasts3"] += 1
                                         swich_shark = True
                                         swich_kraken = True
@@ -1903,13 +1931,16 @@ def battle():
                                         
                                         sound_shield.play()
 
-                                        sending(row, i, num, 3, 0, kill_type= shot_type)
+                                        turn = False
+
+                                        sending(row, i, num, 3, 1, kill_type= shot_type)
 
                                         print(f'Попал по щиту')
                                         shot = False
                                             
                                 if shot:
                                     data_settings["quasts_do"]["quasts2"] = 0
+                                    data_settings["quasts_do"]["quasts0"] = 0
                                     turn = False 
 
                                     sound_miss.play()  
@@ -1982,10 +2013,11 @@ def battle():
                                 run_battle = False
                                 back = win()
                                 if back == "BACK":
-                                    stop_thread = True
+                                    stop_thread = False
                                     return "BACK"                               
                 
                         elif item.collidepoint(position) and sq_list[1].collidepoint(position) and player_map2[row][cell] == 0 and not item.CLOSE and turn:
+                            data_settings["quasts_do"]["quasts0"] = 0
                             swich_shark = True
                             swich_kraken = True
                             data_settings["quasts"]["miss_cell"] += 1
@@ -1999,6 +2031,7 @@ def battle():
                             sending(row, cell, number, 0, 1, kill_type = 100)  
                             
                         elif item.collidepoint(position) and sq_list[1].collidepoint(position) and player_map2[row][cell] == 3 and not item.CLOSE and turn:
+                            data_settings["quasts_do"]["quasts0"] = 0
                             data_settings["quasts_do"]["quasts3"] += 1
                             swich_shark = True
                             swich_kraken = True
@@ -2038,9 +2071,6 @@ def win():
 
     win_medal = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/win.png"))
     win_medal = pygame.transform.scale(win_medal, [170, 170])
-
-    lose_medal = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/lose.png"))
-    lose_medal = pygame.transform.scale(lose_medal, [170, 170])
     
     for ship in ship_list:
         ship.x = ship.start_x
@@ -2106,9 +2136,6 @@ def win():
 
         if data_settings["quasts"]["win"] == 1:
             screen.blit(win_medal, (830, 440))
-
-        if data_settings["quasts"]["lose"] == 1:
-            screen.blit(lose_medal, (830, 440))
         
         pygame.display.flip()
         clock.tick(FPS) 
@@ -2127,9 +2154,6 @@ def win():
 def lose():
     res_bg = pygame.image.load(os.path.abspath(__file__ + "/../../../image/bg/res_bg.png")).convert_alpha()
     res_bg = pygame.transform.scale(res_bg, [1400, 800])
-
-    win_medal = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/win.png"))
-    win_medal = pygame.transform.scale(win_medal, [170, 170])
 
     lose_medal = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/lose.png"))
     lose_medal = pygame.transform.scale(lose_medal, [170, 170])
@@ -2201,9 +2225,6 @@ def lose():
         if data_settings["quasts"]["kill_cell"] >= 65:
             medal_kraken = add_medal("ametyst_kraken_medalka")
             screen.blit(medal_kraken, (630, 440))
-
-        if data_settings["quasts"]["win"] == 1:
-            screen.blit(win_medal, (830, 440))
 
         if data_settings["quasts"]["lose"] == 1:
             screen.blit(lose_medal, (830, 440))

@@ -281,7 +281,7 @@ def placement():
             if press[0]:
                 button_ready_window = button_ready.checkPress(position = position, press = press)
 
-                if button_ready_window and any(ship.STAY for ship in ship_list):
+                if button_ready_window and all(ship.STAY for ship in ship_list):
                     res = wait_opponent()
             
                     if res == "BACK":

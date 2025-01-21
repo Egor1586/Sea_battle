@@ -15,7 +15,6 @@ def shop():
 
     PAGE1 = True
     PAGE2 = False
-    PAGE3 = False
 
     card = pygame.image.load(os.path.abspath(__file__ + "/../../../image/skills/card.png"))
     card = pygame.transform.scale(card, [240, 380])
@@ -80,10 +79,6 @@ def shop():
             price_torpedo.text_draw(screen= screen)
 
             screen.blit(image_point, (160, 560))
-        
-        if PAGE3:
-            pass
-            # print("PAGE3")
 
         
         position = pygame.mouse.get_pos()
@@ -98,7 +93,6 @@ def shop():
         
         armory_page1.button_draw(screen = screen)
         armory_page2.button_draw(screen = screen)
-        armory_page3.button_draw(screen = screen)
 
         pygame.display.flip()
         clock.tick(60)
@@ -108,27 +102,18 @@ def shop():
 
                 back_to_menu = button_back_menu.checkPress(position = position, press = press)
 
-                PAGE1 = armory_page1.checkPress(position = position, press = press)
-                PAGE2 = armory_page2.checkPress(position = position, press = press)
-                PAGE3 = armory_page3.checkPress(position = position, press = press)
+                page1 = armory_page1.checkPress(position = position, press = press)
+                page2 = armory_page2.checkPress(position = position, press = press)
                 
                 if back_to_menu:
                     return "HOME"
-                
-                if not PAGE1 and not PAGE2 and not PAGE3:
-                    pass
-                elif PAGE1:
+                    
+                if page1:
                     PAGE1 = True
                     PAGE2 = False
-                    PAGE3 = False
-                elif PAGE2:
+                elif page2:
                     PAGE1 = False
                     PAGE2 = True
-                    PAGE3 = False
-                elif PAGE3:
-                    PAGE1 = False
-                    PAGE2 = False
-                    PAGE3 = True
 
                 
             if event.type == pygame.QUIT:
