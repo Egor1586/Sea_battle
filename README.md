@@ -52,7 +52,6 @@ graph TD
     A[Sea-Battle-Game] --> C[image] --> 2(just archive with images that we are using)
     A[Sea-Battle-Game] --> D[Modules] --> E[game] --> 
     D[Modules] --> F[server.py]
-    E[game] --> G[basement] --> 4(tools and classes)
     E[game] --> 7(mechanics and diffrent windows)
     E[game] --> I[armory.py] --> 8(contains all info about our special powers such as price, name, radius...)
     E[game] --> J[battle.py] --> 9(contains all mechanics that working only when you battling your opponent)
@@ -62,12 +61,12 @@ graph TD
     E[game] --> N[wait_opponent.py] --> 13(contains screen where you can choose join or create_server)
     E[game] --> S[settings_real.py] --> 30(contains window settings. You can go there by choosing button settings in menu. Also you can change bg music, cursor and volume)
     E[game] --> O[basement] --> 14[bg_music.py] --> 22(contains function that playing backgound music. you can choos)
-    E[game] --> P[basement] --> 15[button.py] --> 23(contains two classes, one of them can create text by using class Text and the other one is Button that creates a presseable button)
-    E[game] --> Q[basement] --> 16[read_json.py] --> 24(contains simple function that reads json and returns dict)
-    E[game] --> R[basement] --> 17[screen.py] --> 25(contains object screen)
-    E[game] --> S[basement] --> 18[ships.py] --> 26(contains big class Ships that creates ships!)
-    E[game] --> U[basement] --> 19[skills.py] --> 27(contains class Skills that creates skills)
-    E[game] --> V[basement] --> 20[write_json.py] --> 28(contains a simple function that write some data to json)
+    E[game] --> O[basement] --> 15[button.py] --> 23(contains two classes, one of them can create text by using class Text and the other one is Button that creates a presseable button)
+    E[game] --> O[basement] --> 16[read_json.py] --> 24(contains simple function that reads json and returns dict)
+    E[game] --> O[basement] --> 17[screen.py] --> 25(contains object screen)
+    E[game] --> O[basement] --> 18[ships.py] --> 26(contains big class Ships that creates ships!)
+    E[game] --> O[basement] --> 19[skills.py] --> 27(contains class Skills that creates skills)
+    E[game] --> O[basement] --> 20[write_json.py] --> 28(contains a simple function that write some data to json)
     E[game] --> 31[settings.json] --> 32(contains all of our global settings)
     
     A[Sea-Battle-Game] --> H[sound] --> 5(contains sounds)
@@ -159,10 +158,11 @@ Support our team(pls) --> place your cvv here!
 - два поля (ліве поле - ВАШЕ із відображеними на ньому кораблями / праве поле супротивника з прихованими на ньому кораблями ворога.)
 - дві лампи по бокам (зелена лампа й червона. Відповідають за право ходу користувача та його супротивника)
 
-![green_light]()
-![red_light]()
+![green_light](/image/skills/lamp_active.png)
+![red_light](/image/skills/lamp_unactive.png)
 
-- арсенал зброї
+- арсенал зброї:
+    - 
 
  Перший хід обирається на рандом (якщо зелена лампа горить з лівої сторони ). 
 
