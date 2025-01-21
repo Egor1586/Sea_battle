@@ -27,7 +27,7 @@
         "conect": 0
     },
     "quasts": {
-        "miss_cell": 7,
+        "miss_cell": 11,
         "shield_cell": 0,
         "do_shield": 0,
         "kill_cell": 9,
@@ -36,8 +36,8 @@
         "lose": 0
     },
     "quasts_do": {
-        "quasts0": 1,
-        "quasts1": 1,
+        "quasts0": 0,
+        "quasts1": 0,
         "quasts2": 0,
         "quasts3": 0,
         "quasts4": 0,

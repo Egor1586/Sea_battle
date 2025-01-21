@@ -25,9 +25,11 @@
 
 - [Modules used](#modules-used)
 
-- [Game functional](#)
+- [Game functional](#game-functional)
 
-- [Armory functional](#)
+- [Armory functional](#armory-functional)
+
+- [Credits](#made-by-egor-ivan-tima-ratmir)
 
 
 
@@ -82,7 +84,9 @@ graph TD
 1. Github - [Tymofii](https://github.com/TymofiiZelenyi)
 2. Github - [Egor](https://github.com/Egor1586)
 3. Github - [Ivan](https://github.com/IvanovIvaan)
-4. Github - [Ratmir]()
+4. Github - [Ratmir](https://github.com/ratmir-svg)
+
+- [BACK](#different-information)
 
 # Support team:
 - Telegram --> @Big_Floooopa
@@ -91,19 +95,19 @@ graph TD
 
 Support our team(pls) --> place your cvv here!
 
-
+- [BACK](#different-information)
 # Technologies and languages we used
 1. >Python - We used Python and Django for rapid development of web applications.
 2. >Figma - We used Figma for creating the design of our website.   
 
 
-
+- [BACK](#different-information)
 # Figma of the project
 
 - [Figma](https://www.figma.com/design/joBvMYOgpufLtGiCqvJnJt/Untitled?node-id=0-1&t=JThopTyiUqR1RWHE-1)
 - [Figjam](https://www.figma.com/board/tlhJvV4adRfLPIy0UZ9NUE/Untitled?node-id=1-5&t=6B7FpF1CBX8vuU7X-1)
 
-
+- [BACK](#different-information)
 # Modules used
 
 - pygame 
@@ -113,22 +117,225 @@ Support our team(pls) --> place your cvv here!
 - pillow 
 - Threads 
 
+- [BACK](#different-information)
 
 # Game functional:
+```python
 
+```
+- [BACK](#different-information)
 При відкриті програми для користувача випливає головне вікно "МЕНЮ", у якому є можливість вибору між кнопками:
 - PLAY
 - ARMORY
 - SETTINGS
 - QUIT
 
+![menu_background](/image/readme_images/menu_photo.png)
+
 Кнопка "PLAY":
 - Натиснувши на дану кнопку, гравець переходить на наступний етап гри - вікно очікування, або ж вікно приєднання до онлайн гри з іншим користувачем. У даному вікні присутні дві подальші кнопки "CREATE SERVER" та "JOIN". 
     
     "CREATE SERVER" відповідає за створення власного серверу за допомогою LAN Ip адесси.
-    "JOIN" - допомагає приєднатися до існуючого серверу.
+```python
+    def start_server():  
+        # створили socket для передачи даних вказавши версію IP TCP тип з'єднання 
+        with socket.socket(family = socket.AF_INET, type = socket.SOCK_STREAM) as server_socket: 
+            # зв'язуємо socket з IP та портом 
+            server_socket.bind(("localhost", 8081)) #той айпішнік, який не дома у Тимофія 
+
+            server_socket.listen(2) 
+
+            try:
+                client_socket1, adress1 = server_socket.accept() 
+                print(client_socket1, adress1) 
+            except socket.timeout:
+                print("TIMEOUT 1")
+                return
     
-Після вибору будь якої з пропонованих клавішей, гравцю надається доступ до наступного вікна, яке відповідає за розташування власних кораблів на 2D полі розмірами 10*10 одиниць. На вибір для розташування гравцю надаються 10 кораблів:
+
+            try:
+                client_socket2, adress2 = server_socket.accept() 
+                print(client_socket2, adress2) 
+            except socket.timeout:
+                print("TIMEOUT 2")
+                return
+    
+            data1 = client_socket1.recv(4096)  # Преобразуем байты в строку 
+            client_socket2.sendall(data1) 
+    
+            data2 = client_socket2.recv(4096)  # Преобразуем байты в строку 
+            client_socket1.sendall(data2) 
+    
+            number = int(random.randint(0, 1)) 
+            print(number) 
+            if not number: 
+                print("first 1") 
+                client_socket1.sendall("you".encode()) 
+                client_socket2.sendall("not".encode()) 
+            elif number: 
+                print("first 2") 
+                client_socket1.sendall("not".encode()) 
+                client_socket2.sendall("you".encode()) 
+    
+            print(number) 
+    
+            while True:   
+                if number == 1: 
+                    shot2 = client_socket2.recv(35).decode() 
+    
+                    shot2 = shot2.strip("[]") 
+                    shot2 = [int(num) for num in shot2.split(",")] 
+                    number = bool(shot2[4]) 
+                    number = not number 
+                    number = int(number) 
+                    shot2 = ",".join(map(str, shot2)) 
+    
+                    client_socket1.sendall(shot2.encode()) 
+                    
+                elif number == 0: 
+                    shot1 = client_socket1.recv(35).decode() 
+    
+                    shot1 = shot1.strip("[]") 
+                    shot1 = [int(num) for num in shot1.split(",")] 
+                    number = int(shot1[4]) 
+                    shot1 = ",".join(map(str, shot1)) 
+    
+                    client_socket2.sendall(shot1.encode())  
+
+            server_thread = Thread(target = start_server)
+                    
+```
+    "JOIN" - допомагає приєднатися до існуючого серверу.
+ 
+```python
+    def connect_to():
+            '''
+            Пiд'єднується до сервера
+            '''
+            client_socket.connect(("localhost", 8081))
+            print("connect")
+```
+    Пересилання даних відбувається за допомогою функції sending() та другого потоку always_recv()
+
+```python
+    def sending(row: int, cell: int, number: int, shot_type: int, turn: bool, kill_type: int, skill = 0) -> None :
+        '''
+        Запаковує всі дані у `data` та відправляє на сервер
+        '''
+        data = [row, cell, number, shot_type, turn, kill_type, skill]
+        print(data)
+        data = json.dumps(data)
+        client_socket.sendall(data.encode())
+
+        print("sending")
+
+
+    
+    
+    def always_recv():
+        global turn
+        global run_battle
+        global stop_thread
+
+        while stop_thread:
+            data = client_socket.recv(35).decode()
+            if data:
+                data = data.strip("[]")
+                data = [int(num) for num in data.split(",")]
+
+                c_row = int(data[0])
+                c_cell = int(data[1])
+                c_number = int(data[2])
+                c_type = int(data[3])
+                turn = int(data[4])
+                kill_type = int(data[5])
+                skill = int(data[6])
+
+                if skill == 1:                       
+                    bomb_list= [(c_row, c_cell), (c_row, c_cell- 1), (c_row, c_cell+ 1), (c_row- 1, c_cell), (c_row+ 1, c_cell), (c_row- 1, c_cell- 1), (c_row- 1, c_cell+ 1), (c_row+ 1, c_cell- 1), (c_row+ 1, c_cell+ 1)]
+                    for coordinate in bomb_list:
+                        if coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map1[coordinate[0]][coordinate[1]] == 1:
+                            print(coordinate[0], coordinate[1], player_map1[coordinate[0]][coordinate[1]])
+                            num = int(str(coordinate[0]) + str(coordinate[1]))
+                            hit_list.append(pygame.Rect(row_list_player[num].x, row_list_player[num].y ,60, 60))   
+                            player_map1[coordinate[0]][coordinate[1]] = 2                
+                            row_list_player[num].CLOSE = True
+                            
+                            shot_type = new_finder(player_map1, coordinate[0], coordinate[1])
+                            map(row_list_player, coordinate[0], coordinate[1], num, shot_type)
+
+                            print(f'Попал по кораблику')
+
+                            
+                            res = check_win()
+                            print(res)
+                            if res == "WIN":
+                                turn = False
+                                run_battle = False
+                                back = win()
+                                if back == "BACK":
+                                    stop_thread = False
+                                    return "BACK"
+
+                        elif coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map1[coordinate[0]][coordinate[1]] == 0:
+                            print(coordinate[0], coordinate[1], player_map1[coordinate[0]][coordinate[1]])
+
+                        elif coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map1[coordinate[0]][coordinate[1]] == 3:
+                            print(coordinate[0], coordinate[1], player_map1[coordinate[0]][coordinate[1]])
+                            player_map2[c_row][c_cell] = 1
+
+                if skill == 5:
+                    print("Враг проставил щит ")
+                    player_map2[c_row][c_cell] = 3
+
+                if skill == 55:
+                    print("Враг сломал щит")
+                    for index, shield in enumerate(shield_list):
+                        for item in row_list_player:
+                            if item.x == shield.x and item.y == shield.y:
+                                print(index)
+                                shield_list.pop(index)
+                                player_map1[c_row][c_cell] = 1
+                    
+                empty= 0
+                for item in row_list_player:
+                    if empty == c_number:
+                        if c_type == 1 and skill != 1 and skill != 5 and skill != 55 and skill != 3 :                    
+                            hit_list.append(pygame.Rect(item.x, item.y ,60, 60)) 
+                            print(f"Изменение player_map2[{row}][{cell}] до: {player_map1[row][cell]}")
+                            player_map1[c_row][c_cell] = 2
+                            print(f"Изменение player_map2[{row}][{cell}] после: {player_map1[row][cell]}") 
+
+                            map(row_list_player, c_row, c_cell, c_number, kill_type)  
+
+                            res = check_lose()
+                            if res == "LOSE":
+                                stop_thread = False
+                        
+                        elif c_type == 0 and skill != 1 and skill != 5 and skill != 55 and skill !=3 and skill != 4:
+                            miss_list.append(pygame.Rect(item.x, item.y ,60, 60))  
+                            print("miss")
+
+                        elif c_type == 3:
+                            player_map2[c_row][c_cell] = 1
+                            print("shit")
+                    
+                    empty+= 1
+
+    server_thread = Thread(target = always_recv) 
+    server_thread.start()
+
+```
+
+    
+
+![waiting_for_opponent_background](/image/readme_images/wait_opponent_photo.png)
+    
+Після вибору будь якої з пропонованих клавішей, гравцю надається доступ до наступного вікна, яке відповідає за розташування власних кораблів на 2D полі розмірами 10*10 одиниць.
+
+![placement_background](/image/readme_images/placement_photo.png)
+
+На вибір для розташування гравцю надаються 10 кораблів:
 
 - 4 кораблика розмірами в 1 одиницю
 
@@ -154,37 +361,136 @@ Support our team(pls) --> place your cvv here!
 
 Після розтановки ВСІХ кораблей гравцю надається можливість перейти до етапу початку битви за клавішою "PLAY".
 
-Гра розпочалася. Гравцю надається доступ до вікна битви із своїм супротивником. Вікно битви включає в себе:
+Гра розпочалася. Гравцю надається доступ до вікна битви із своїм супротивником. 
+
+![battle_background](/image/readme_images/battle_photo.png)
+
+Вікно битви включає в себе:
 
 - два поля (ліве поле - ВАШЕ із відображеними на ньому кораблями / праве поле супротивника з прихованими на ньому кораблями ворога.)
 - дві лампи по бокам (зелена лампа й червона. Відповідають за право ходу користувача та його супротивника)
 
 ![green_light](/image/skills/lamp_active.png)
 ![red_light](/image/skills/lamp_unactive.png)
-
+# Armory functional
+- [BACK](#different-information)
 - арсенал зброї:
 
+
+
+```python
+class Skills(): 
+    def __init__(self,name_skill ,x ,y ,price , id): 
+        self.skill= name_skill 
+        self.count= 0 
+        self.x= x  
+        self.y= y 
+        self.price= price 
+        self.id= id
+         
+        self.TAKE = False 
+ 
+        self.rect_x = x 
+        self.rect_y = y 
+ 
+        self.load() 
+ 
+    def load(self): 
+        self.price_text = Text(self.x + 16, self.y + 71, text= str(self.price), color = "#ffb700", text_size= 25) 
+ 
+        path = os.path.abspath(os.path.join(__file__, "..", "..", "..", "..", "image", "skills", f"{self.skill}.png"))
+        self.image = pygame.image.load(path) 
+        self.image = pygame.transform.scale(self.image, [80, 80]) 
+
+        if self.id != 3 and self.id != 5:
+            path_c = os.path.abspath(os.path.join(__file__, "..", "..", "..", "..", "image", "skills", f"{self.skill}_clean.png"))
+            self.image_c = pygame.image.load(path_c) 
+            self.image_c = pygame.transform.scale(self.image_c, [80, 80]) 
+ 
+        path_p = os.path.abspath(os.path.join(__file__, "..", "..", "..", "..", "image", "skills", "plus.png"))
+        self.image_plus = pygame.image.load(path_p) 
+        self.image_plus = pygame.transform.scale(self.image_plus, [30, 30]) 
+ 
+        self.plus_rect = pygame.Rect((self.x + 80, self.y, 30, 30)) 
+        # self.rect_move = pygame.Rect(self.x,self.y, 80, 80) 
+        self.counter = Text(self.x, self.y, text= str(self.count), color = "#D3D3D3") 
+        
+        self.rect = pygame.Rect((self.rect_x, self.rect_y, 80, 80)) 
+ 
+    def draw_skill(self, screen): 
+        # pygame.draw.rect(screen, "Green", self.plus_rect) 
+        screen.blit(self.image_plus, (self.x + 85, self.y)) 
+        # pygame.draw.rect(screen, "Yellow", self.rect) 
+        screen.blit(self.image, (self.x, self.y)) 
+ 
+        self.counter.text_draw(screen= screen) 
+        self.price_text.text_draw(screen= screen) 
+ 
+    def plus(self, point):    
+        if point >= self.price: 
+            self.count += 1 
+            self.counter = Text(self.x, self.y, text= str(self.count), color = "#D3D3D3") 
+            return True
+         
+        return False
+     
+    def take(self): 
+        if self.count > 0:
+            print("TAKE") 
+            self.TAKE = True 
+ 
+    def move(self, position, press, screen): 
+        if press[0] and self.TAKE: 
+            self.rect_x = position[0] - 25 
+            self.rect_y = position[1] - 25 
+
+            if self.id != 3 and self.id !=5:
+                screen.blit(self.image_c, (self.rect_x, self.rect_y)) 
+
+            elif self.id == 3 or self.id == 5:
+                screen.blit(self.image, (self.rect_x, self.rect_y)) 
+
+        else:
+            self.TAKE = False
+```
+    
+    
+    
     - Бомба (Bomb): 
+    Взривае кораблі в радіусі 1 клітин, для цього створює bomb_list який перебирає і знаходить на матриці клітини з кораблем (на матриці корабель це цифра 1)
 
     ![Bomb](/image/skills/bomb.png)
-
+```python
+bomb= Skills(name_skill = "bomb",x= 70 ,y= 15 ,price= 60, id= 1) 
+```
     - Динаміт (Dynamite): 
-
+    Динаміт підриває в чотирьох сторонах від себе, для цього створює dynamite_list який перебирає і находить на матриці клітини  з кораблем (на матриці корабель це цифра 1)
+```python
+dynamite= Skills(name_skill = "dynamite",x= 190 ,y= 15, price= 40, id= 2) 
+```
     ![Dynamike](/image/skills/bomb.png)
 
     - Радар (Radar): 
-
+    Шукаючи кораблі в радіусі 1 блок, для цього створює radar_list який перебирає і знаходить на матриці клітини з кораблем (на матриці корабель це цифра 1) і відображає їх на екрані зі звуковим супроводом
+```python
+radar = Skills(name_skill= "Radar",x= 310, y= 15, price= 50, id= 3) 
+```
     ![Radar](/image/skills/bomb.png)
 
     - Ракета (Rocket): 
-
+    Шукає короблі в радіусі 2 клітинок, стріляє по першому знайденому кораблю
+```python
+rocket= Skills(name_skill = "rocket",x= 430 , y= 15, price= 50, id= 4) 
+```
     ![Rocket](/image/skills/bomb.png)
 
     - Щит (Shield): 
+    Коли ставиться щит ваша клітина стає захищеною і на матриці змінюється на 3, при попаданні по щиту програватиметься звук і хід переходить супернику, що дає зрозуміти, що ви збили ворожий щит.
 
     ![Shield](/image/skills/bomb.png)
 
     - Торпеда (Torpedo): 
+    Торпеда проходить один ряд при знаходженні кораблю підриває його, якщо на шляху стоїть щит, то торбета зламає його
 
     ![Torpedo](/image/skills/bomb.png)
 
@@ -204,4 +510,4 @@ Support our team(pls) --> place your cvv here!
 
 
 ## Made by Egor, Ivan, Tima, Ratmir
-
+- [BACK](#different-information)
