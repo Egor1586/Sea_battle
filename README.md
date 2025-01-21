@@ -121,8 +121,8 @@ Support our team(pls) --> place your cvv here!
 
 - [BACK](#different-information)
 # Technologies and languages we used
-1. >Python - We used Python and Django for rapid development of web applications.
-2. >Figma - We used Figma for creating the design of our website.   
+1. >Python - We used Python for rapid development of our game.
+2. >Figma - We used Figma for creating the design of our game.   
 
 
 - [BACK](#different-information)
@@ -514,6 +514,15 @@ Support our team(pls) --> place your cvv here!
 - два поля (ліве поле - ВАШЕ із відображеними на ньому кораблями / праве поле супротивника з прихованими на ньому кораблями ворога.)
 - дві лампи по бокам (зелена лампа й червона. Відповідають за право ходу користувача та його супротивника)
 
+- За попадання по кораблю ви отримуєте 10 поінтів (поінт всередині ігрова валюта) 
+![hit](/image/cell/hit.png)
+
+- I 2 поінти за промах.
+![miss](/image/cell/miss.png)
+
+![point](/image/achievements/point.png)
+
+-Поінти можна використовувати для покупки здібностей, їх ціна вказана синізу. Коли ви купили зброю, ви можете використовувати її, затиснувши на ньому ліву клаптик миші і передавши на підлозі ворога або якщо це щит на своє. У місце де ви відімкнете ліву кнопку миші і станеться застосування можливості
 
 # Armory functional
 - [BACK](#different-information)
