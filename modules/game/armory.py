@@ -19,7 +19,7 @@ def shop():
     card = pygame.image.load(os.path.abspath(os.path.join(__file__, "../../../image/skills/card.png")))
     card = pygame.transform.scale(card, [240, 380])
 
-    image_point = pygame.image.load(os.path.abspath(__file__ + "/../../../image/achievements/point.png"))
+    image_point = pygame.image.load(os.path.join(__file__, "../../../image/achievements/point.png"))
     image_point = pygame.transform.scale(image_point, [50, 30])
 
     point_list = [image_point, image_point, image_point, image_point, image_point]
