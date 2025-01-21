@@ -50,7 +50,8 @@
 graph TD
     A[Sea-Battle-Game] --> B[fonts] --> 1(just archive with fonts that we are using)
     A[Sea-Battle-Game] --> C[image] --> 2(just archive with images that we are using)
-    
+    A[Sea-Battle-Game] --> D[Modules]
+    A[Sea-Battle-Game] --> 
     D[Modules] --> F[server.py]
     E[game] --> 7(mechanics and diffrent windows)
     E[game] --> I[armory.py] --> 8(contains all info about our special powers such as price, name, radius...)
@@ -162,9 +163,35 @@ Support our team(pls) --> place your cvv here!
 ![red_light](/image/skills/lamp_unactive.png)
 
 - арсенал зброї:
-    - Бомба (Bomb)
 
- Перший хід обирається на рандом (якщо зелена лампа горить з лівої сторони ). 
+    - Бомба (Bomb): 
+
+    ![Bomb](/image/skills/bomb.png)
+
+    - Динаміт (Dynamite): 
+
+    ![Dynamike](/image/skills/bomb.png)
+
+    - Радар (Radar): 
+
+    ![Radar](/image/skills/bomb.png)
+
+    - Ракета (Rocket): 
+
+    ![Rocket](/image/skills/bomb.png)
+
+    - Щит (Shield): 
+
+    ![Shield](/image/skills/bomb.png)
+
+    - Торпеда (Torpedo): 
+
+    ![Torpedo](/image/skills/bomb.png)
+
+
+ Перший хід обирається за функцією абсолютного рандома (якщо зелена лампа горить з лівої сторони біля вашого поля - хід за вами. Якщо навпаки й біля вашого поля горить червоне світно - хід заборонено -> чекайте завершення ходу супротивника).
+
+Ігрова валюта "Поінти" (POINTS) відображаються з правого верхнього кутку вікна. Ця валюта начисляється вам під час битви за постріли, попадання й потоплення кораблів супротивника. За дану валюту гравцю надається можливість купувати й використовувати вище згадані здібності (спеціальну зброю) та одразу використовувати під час поточної битви. Після битви начислені поінти ОБНУЛЬОВУЮТЬСЯ. На то між ігрова валюта "Монети" зберігаються й після битви та залишаються задля покупок поза межами битви. Дані монети можливо отримати тільки за попадання та потоплення ворожих кораблів й відображатимуться тільки у вікні головного меню. 
 
 
 

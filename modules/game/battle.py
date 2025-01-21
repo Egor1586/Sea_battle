@@ -85,83 +85,85 @@ def battle():
 
     quasts_do_list =[quasts1, quasts2, quasts3, quasts4, quasts5, quasts6]
 
-    image_point = pygame.image.load( os.path.abspath(os.path.join(__file__, "../../../image/achievements/point.png")))
+    image_point = pygame.image.load(
+    os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "achievements", "point.png"))
+    )
     image_point = pygame.transform.scale(image_point, [150, 90])
 
     image_point_small = pygame.transform.scale(image_point, [75, 45])
 
     bg = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/bg/battle_field.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "bg", "battle_field.png"))
     )
     bg = pygame.transform.scale(bg, [PLACE_LENGTH, PLACE_LENGTH])
 
     grey_bg = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/bg/grey_bg.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "bg", "grey_bg.png"))
     ).convert_alpha()
     grey_bg = pygame.transform.scale(grey_bg, [1400, 800])
 
     frame = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/skills/sp_weapon_holder.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "skills", "sp_weapon_holder.png"))
     )
     frame = pygame.transform.scale(frame, [85, 85])
 
     hit = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/cell/hit.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "cell", "hit.png"))
     )
     hit = pygame.transform.scale(hit, [60, 60])
 
     miss = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/cell/miss.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "cell", "miss.png"))
     )
     miss = pygame.transform.scale(miss, [60, 60])
 
     shield = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/cell/shield_cell.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "cell", "shield_cell.png"))
     )
     shield = pygame.transform.scale(shield, [60, 60])
 
     assignments = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/achievements/quasts.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "achievements", "quasts.png"))
     )
     assignments = pygame.transform.scale(assignments, [110, 110])
 
     assignments_zone = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/achievements/quasts_rect.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "achievements", "quasts_rect.png"))
     )
     assignments_zone = pygame.transform.scale(assignments_zone, [504, 568])
 
     radar_cell = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/cell/radar_cell.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "cell", "radar_cell.png"))
     )
     radar_cell = pygame.transform.scale(radar_cell, [60, 60])
 
     lamp_active = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/skills/lamp_active.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "skills", "lamp_active.png"))
     ).convert_alpha()
     lamp_active = pygame.transform.scale(lamp_active, [60, 450])
 
     lamp_unactive = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/skills/lamp_unactive.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "skills", "lamp_unactive.png"))
     )
     lamp_unactive = pygame.transform.scale(lamp_unactive, [60, 450])
 
     win_medal = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/achievements/win.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "achievements", "win.png"))
     )
     win_medal = pygame.transform.scale(win_medal, [55, 55])
 
     lose_medal = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/achievements/lose.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "achievements", "lose.png"))
     )
     lose_medal = pygame.transform.scale(lose_medal, [55, 55])
 
     check_quasts = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/achievements/check_quasts.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "achievements", "check_quasts.png"))
     )
     check_quasts = pygame.transform.scale(check_quasts, [60, 60])
 
     do_quasts = pygame.image.load(
-        os.path.abspath(os.path.join(__file__, "../../../image/achievements/do_quasts.png"))
+        os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "achievements", "do_quasts.png"))
     )
     do_quasts = pygame.transform.scale(do_quasts, [60, 60])
 
@@ -177,7 +179,7 @@ def battle():
             quasts.y += 325
 
     def add_medal(name):
-        medal = pygame.image.load(os.path.abspath(os.path.join(__file__, "../../../image/achievements", f"{name}.png")))
+        medal = pygame.image.load(os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "achievements", f"{name}.png")))
         medal = pygame.transform.scale(medal, [55, 55])
 
         return medal

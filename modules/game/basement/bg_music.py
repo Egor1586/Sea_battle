@@ -17,7 +17,7 @@ def play_music(name_music: str, volume: int):
     pygame.mixer.music.set_volume(volume)
 
 def sound_path(name):
-    path = os.path.abspath(os.path.join(__file__, "../../../../sound/sounds", f"{name}.mp3"))
+    path = os.path.abspath(os.path.join(__file__, "..", "..", "..", "..", "sound", "sounds", f"{name}.mp3"))
     return path
 
 

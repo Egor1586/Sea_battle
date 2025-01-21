@@ -52,10 +52,10 @@ class Button():
         '''
         
         #шрифт тексту та його величина
-        path_to_fonts = os.path.abspath(os.path.join(__file__, "../../../../fonts/"))
+        path_to_fonts = os.path.abspath(os.path.join(__file__, "..", "..", "..", "..", "fonts"))
         main_font = pygame.font.Font(os.path.join(path_to_fonts, "m_font.ttf"), self.text_size)
 
-        self.button = pygame.image.load(os.path.abspath(os.path.join(__file__, "../../../../image/button/default_button_disable_600-150.png"))
+        self.button = pygame.image.load(os.path.abspath(os.path.join(__file__, "..", "..", "..", "..", "image", "button", "default_button_disable_600-150.png"))
 )
         self.button = pygame.transform.scale(self.button, [self.width, self.height])
 
@@ -157,8 +157,9 @@ class Text():
         Знаходить та завантажує шрифт до гри та змінює розмір 
         '''        
         #шрифт тексту та його величина
-        path_to_fonts = os.path.abspath(__file__+ "/../../../../fonts/")
-        self.main_font = pygame.font.Font(path_to_fonts + "/m_font.ttf", self.text_size)
+        path_to_fonts = os.path.abspath(os.path.join(__file__, "..", "..", "..", "..", "fonts"))
+        path_to_font = os.path.join(path_to_fonts, "m_font.ttf")
+        self.main_font = pygame.font.Font(path_to_font, self.text_size)
         self.lines = self.text.split("\n")
         self.rendered_lines = [self.main_font.render(line, True, self.color) for line in self.lines]
 
