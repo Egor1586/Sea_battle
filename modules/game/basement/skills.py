@@ -34,16 +34,16 @@ class Skills():
     def load(self): 
         self.price_text = Text(self.x + 16, self.y + 71, text= str(self.price), color = "#24a318", text_size= 25) 
  
-        path = os.path.abspath(__file__ + f"/../../../../image/skills/{self.skill}.png")
+        path = os.path.abspath(os.path.join(__file__, "../../../../image/skills", f"{self.skill}.png"))
         self.image = pygame.image.load(path) 
         self.image = pygame.transform.scale(self.image, [80, 80]) 
 
         if self.id != 3 and self.id != 5:
-            path_c = os.path.abspath(__file__ + f"/../../../../image/skills/{self.skill}_clean.png")
+            path_c = os.path.abspath(os.path.join(__file__, "../../../../image/skills", "plus.png"))
             self.image_c = pygame.image.load(path_c) 
             self.image_c = pygame.transform.scale(self.image_c, [80, 80]) 
  
-        path_p = os.path.abspath(__file__ + f"/../../../../image/skills/plus.png")
+        path_p = os.path.abspath(os.path.join(__file__, "../../static", fd))
         self.image_plus = pygame.image.load(path_p) 
         self.image_plus = pygame.transform.scale(self.image_plus, [30, 30]) 
  

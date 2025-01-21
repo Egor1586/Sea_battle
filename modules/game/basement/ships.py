@@ -53,7 +53,7 @@ class Ships():
         self.load()
 
     def search_abs_path(self, DIR):
-        path = os.path.abspath(__file__ + f"/../../../../image/ship/{self.count_length}-SHIP-{DIR}.png")
+        path = os.path.abspath(os.path.join(__file__, "../../../../image/ship", f"{self.count_length}-SHIP-{DIR}.png"))
         return path
 
     def load(self):

@@ -52,10 +52,11 @@ class Button():
         '''
         
         #шрифт тексту та його величина
-        path_to_fonts = os.path.abspath(__file__+ "/../../../../fonts/")
-        main_font = pygame.font.Font(path_to_fonts + "/m_font.ttf", self.text_size)
+        path_to_fonts = os.path.abspath(os.path.join(__file__, "../../../../fonts/"))
+        main_font = pygame.font.Font(os.path.join(path_to_fonts, "m_font.ttf"), self.text_size)
 
-        self.button = pygame.image.load(os.path.abspath(__file__ + "/../../../../image/button/default_button_disable_600-150.png"))
+        self.button = pygame.image.load(os.path.abspath(os.path.join(__file__, "../../../../image/button/default_button_disable_600-150.png"))
+)
         self.button = pygame.transform.scale(self.button, [self.width, self.height])
 
         #текст та його колір
