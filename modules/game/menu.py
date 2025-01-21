@@ -1,5 +1,6 @@
 import pygame
 import os
+import socket
 
 from .basement import *
 from .placement import placement
@@ -15,10 +16,19 @@ GOLD = data["main"]["GOLD"]
 FPS = data["main"]["FPS"]
 MUSIC_NAME = str(data["main"]["MUSIC_NAME"])
 
-play_music(f"\{MUSIC_NAME}", volume = 0)
+play_music(f"{MUSIC_NAME}", volume = 0.1)
 
 def menu():
     run_menu = True
+
+    def get_local_ip():
+        hostname = socket.gethostname()
+        local_ip = socket.gethostbyname(hostname)
+        return local_ip
+    
+    data["lan_ip"] = get_local_ip()
+
+    IP_TEXT = Text(x =120, y = 550, text = str(data["lan_ip"]), text_size=45, color="Black")
 
     im_coin = pygame.image.load(os.path.abspath(__file__ + "/../../../image/coins/coin_silver.png"))
     im_coin = pygame.transform.scale(im_coin, [60, 60])
@@ -30,7 +40,6 @@ def menu():
     count_gold = Text(x = 1050, y = 50, text = str(GOLD), text_size=25, color="Grey")
     
     while run_menu:
-        
         screen.fill(MAIN_WINDOW_COLOR)
 
         screen.blit(bg, (0, 0))
@@ -43,6 +52,8 @@ def menu():
         button_settings.button_draw(screen = screen)
         button_Armory.button_draw(screen = screen)
         button_quit.button_draw(screen = screen)
+
+        IP_TEXT.text_draw(screen = screen)
 
         position = pygame.mouse.get_pos()
         press = pygame.mouse.get_pressed()

@@ -10,7 +10,7 @@ def play_music(name_music: str, volume: int):
     '''
     Ця функція програє музику та змінює гучність нуя
     '''
-    path_to_music = os.path.abspath(__file__ + "/../../../../sound/music")
+    path_to_music = os.path.abspath(os.path.join(__file__, "..", "..", "..", "..", "sound", "music"))
     music = (path_to_music + f"/{name_music}.mp3")
     pygame.mixer.music.load(music)
     pygame.mixer.music.play(loops=0, start=2.0, fade_ms=0)

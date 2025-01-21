@@ -11,7 +11,7 @@ FPS = data["main"]["FPS"]
 def settings_real():
     run_settings = True
 
-    SOUND = data["main"]["MUSICK"]
+    SOUND = data["main"]["MUSIC"]
 
     sound_list = []
     space_off = 55
@@ -26,15 +26,6 @@ def settings_real():
     music2  = False
     music3 = False
     music4  = False
-
-    # def cursor(name, screen):
-    #     path = os.path.abspath(__file__ + f"/../../../image/cursors/{name}.png")
-    #     image = pygame.image.load(path)
-    #     image = pygame.transform.scale(image, [32, 32])
-    #     x, y = pygame.mouse.get_pos()
-    #     x -= 16
-    #     y -= 16
-    #     screen.blit(image, (x, y))
 
     WIN_SOUND = True
     WIN_CURSOR = False
