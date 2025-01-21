@@ -32,7 +32,7 @@ class Skills():
         self.load() 
  
     def load(self): 
-        self.price_text = Text(self.x + 16, self.y + 60, text= str(self.price), color = "Black", text_size= 25) 
+        self.price_text = Text(self.x + 16, self.y + 71, text= str(self.price), color = "#24a318", text_size= 25) 
  
         path = os.path.abspath(__file__ + f"/../../../../image/skills/{self.skill}.png")
         self.image = pygame.image.load(path) 

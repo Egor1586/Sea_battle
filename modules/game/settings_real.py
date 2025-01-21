@@ -138,17 +138,13 @@ def settings_real():
                     return "HOME"
                 
                 if music1:
-                    print("c418")
                     play_music("c418", volume = ON)
                 if music2:
-                    print("new_year")
                     play_music("new_year", volume = ON)
                 if music3:
-                    print("trolo")
                     data["main"]["MUSICK_NAME"] = "trolo"
                     play_music("trolo", volume = ON)
                 if music4:
-                    print("rammstein")
                     data["main"]["MUSICK_NAME"] = "rammstein"
                     play_music("rammstein", volume = ON)
                 

@@ -10,6 +10,7 @@
 import pygame
 import os
 
+from .bg_music import swich
 from .read_json import read_json
 
 pygame.init()
@@ -88,6 +89,7 @@ class Button():
         
         # if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom) and press[0]:
         if self.rect.collidepoint(position) and press[0]:
+            swich.play()
             return True
 
 
@@ -127,7 +129,7 @@ join = Button(x = 1000, y = 600, width = 300, height = BUTTON_MENU_HEIGHT, text 
 create = Button(x = 200, y = 600, width = 400, height = BUTTON_MENU_HEIGHT, text = "Create server", text_size= 25)
 
 #Створення кнопок для екрану BATTLE
-your_screen_text = Button(x = 70, y = 133, width = 604, height = 45, text = "         Your screen", text_size = 18, button_color = BUTTON_DARKER_COLOR)
+your_screen_text = Button(x = 70, y = 133, width = 604, height = 45, text = "           Your screen", text_size = 18, button_color = BUTTON_DARKER_COLOR)
 enemy_screen_text = Button(x = 725, y = 133, width = 604, height = 45, text = "Enemy screen", text_size = 18, button_color = BUTTON_DARKER_COLOR)
 
 c418 = Button(x = 350, y = 230, width = 500, height = 100, text = "c418", text_size = 18, button_color = BUTTON_DARKER_COLOR)
@@ -200,12 +202,12 @@ title_missile = Text(x = 940, y = 270, text = "Missile", text_size=15, color="Bl
 title_shield = Text(x = 1210, y = 270, text = "Shield", text_size=15, color="Black")
 title_bomb= Text(x = 130, y = 270, text = "Bomb", text_size=15, color="Black")
 #
-price_dynamite = Text(x = 315, y = 220, text = "40", text_size=30, color="Black")
-price_torpedo = Text(x = 135, y = 220, text = "30", text_size=30, color="Black")
-price_radar = Text(x = 585, y = 220, text = "50", text_size=30, color="Black")
-price_missile = Text(x = 855, y = 220, text = "50", text_size=30, color="Black")
-price_shield = Text(x = 1125, y = 220, text = "40", text_size=30, color="Black")
-price_bomb= Text(x = 135, y = 220, text = "60", text_size=30, color="Black")
+price_dynamite = Text(x = 365, y = 560, text = "40", text_size=30, color="Black")
+price_radar = Text(x = 630, y = 560, text = "50", text_size=30, color="Black")
+price_missile = Text(x = 893, y = 560, text = "50", text_size=30, color="Black")
+price_shield = Text(x = 1155, y = 560, text = "40", text_size=30, color="Black")
+price_bomb= Text(x = 100, y = 560, text = "60", text_size=30, color="Black")
+price_torpedo = Text(x = 100, y = 560, text = "30", text_size=30, color="Black")
 
 
 skills_info_text = [text_dynamite, text_bomb, text_missile, text_radar, text_shield, text_torpedo, text_missile2, text_radar2]
