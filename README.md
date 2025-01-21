@@ -13,7 +13,9 @@
 
 ### DIFFERENT INFORMATION 
 
-- [How use it](#how-use-it)
+- [How use it on Windows](#how-use-it-on-windows)
+
+- [How use it on Linux or MAC](#how-use-it-on-linux-or-mac)
 
 - [Our project structure](#our-project-structure)
 
@@ -34,15 +36,35 @@
 
 
 
-# How use it:
-1. git clone https://github.com/TymofiiZelenyi/Sea_battle_game.git
+# How use it on Windows:
+1. enter git bash
 
-2. pip install -r requirements.txt
+2. git clone https://github.com/TymofiiZelenyi/Sea_battle_game.git
 
-3. Запускаємо програму на пк через main.py
+2. python -m venv venv
 
-4. Граємо
+3. venv/Scripts/activate
 
+4. choose your activated virtual enviroment
+ 
+5. pip install -r requirements.txt
+
+6. Launch main.py 
+
+# How use it on Linux or MAC:
+1. enter bash
+
+2. git clone https://github.com/TymofiiZelenyi/Sea_battle_game.git
+
+2. python3 -m venv venv
+
+3. venv/Bin/activate
+
+4. choose your activated virtual enviroment
+ 
+5. pip install -r requirements.txt
+
+6. Launch main.py 
 
 ---
 
@@ -122,10 +144,6 @@ Support our team(pls) --> place your cvv here!
 - [BACK](#different-information)
 
 # Game functional:
-```python
-
-```
-- [BACK](#different-information)
 
 При відкриті програми для користувача випливає головне вікно "МЕНЮ", у якому є можливість вибору між кнопками:
 - PLAY
@@ -180,7 +198,7 @@ Support our team(pls) --> place your cvv here!
 
 ```
 
-        За малювання кораблів відповідає мотод ship_draw():
+За малювання кораблів відповідає мотод ship_draw():
 
 ```python          
     def ship_draw(self, screen):
@@ -196,11 +214,11 @@ Support our team(pls) --> place your cvv here!
             # self.sur = pygame.Surface((60, 60 * self.count_length))
             # screen.blit(self.sur, (self.x, self.y))
             #HITBOX
-            screen.blit(self.image_f, (self.x, self.y))
-
-        
+            screen.blit(self.image_f, (self.x, self.y))     
 ```
-    Метод take_ship() відповідає за перевірку того, чи взятий кораблик, якщо так то метод move() починає малювати актуальною позицію. Вихищає її за допомогою координат миші:
+    
+Метод take_ship() відповідає за перевірку того, чи взятий кораблик, якщо так то метод move() починає малювати актуальною позицію. Вихищає її за допомогою координат миші:
+
 ```python     
     def take_ship(self, position):
         if self.rect.collidepoint(position) and all(ship.TAKE == False for ship in ship_list):   
@@ -234,7 +252,9 @@ Support our team(pls) --> place your cvv here!
             self.MOVE = False  
             self.TAKE = False
 ```
-    Створення 10 кораблів за допомогою класу:
+    
+Створення 10 кораблів за допомогою класу:
+
 ```python             
     ship1 = Ships(x = 856, y = 162, count_length = 1, id= 0)
     ship2 = Ships(x = 936, y = 162, count_length = 1, id= 1)
@@ -254,7 +274,7 @@ Support our team(pls) --> place your cvv here!
 
 ```
 
-![waiting_for_opponent_background](/image/readme_images/wait_opponent_photo.png)
+- [BACK](#different-information)
     
 Після вибору будь якої з пропонованих клавішей, гравцю надається доступ до наступного вікна, яке відповідає за розташування власних кораблів на 2D полі розмірами 10*10 одиниць.
 
@@ -262,24 +282,21 @@ Support our team(pls) --> place your cvv here!
 
 На вибір для розташування гравцю надаються 10 кораблів:
 
-- 4 кораблика розмірами в 1 одиницю
+- Чотири однопалубних коралів, розмірами в 1 клітини
 
 ![ship1](/image/ship/1-SHIP-True.png)
 
-- 3 корабля розмірами в 2 одиниці
+- Два двопалубних коралів, розмірами в 2 клітини
 
 ![ship2](/image/ship/2-SHIP-True.png)
-![ship2](/image/ship/2-SHIP-False.png)
 
-- 2 корабля розмірами в 3 одиниці
+- Два трипалубних коралів, розмірами в 3 клітини
 
 ![ship3](/image/ship/3-SHIP-True.png)
-![ship3](/image/ship/3-SHIP-False.png)
 
-- 1 корабель розмірами в 4 одиниці
+- Один чотирипалубних корабель, розмірами в 4 клітини
 
 ![ship4](/image/ship/4-SHIP-True.png)
-![ship4](/image/ship/4-SHIP-False.png)
 
 Користувач може розташовувати кораблі в різних напрямках (по горизонталі - за замовчуванням / по вертикалі - взявши корабель й натиснувши праву клавішу миши)
 Користувач НЕ може ставити повністю, або частично свої кораблі за кордонами обмеженого поля.
@@ -287,8 +304,10 @@ Support our team(pls) --> place your cvv here!
 Після розтановки ВСІХ кораблей гравцю надається можливість перейти до етапу пошуку битви за клавішою "READY".
 
 Вікно приєднання до онлайн гри з іншим користувачем. У даному вікні присутні дві подальші кнопки "CREATE SERVER" та "JOIN"
+
+![waiting_for_opponent_background](/image/readme_images/wait_opponent_photo.png)
     
-    "CREATE SERVER" відповідає за створення власного серверу за допомогою LAN Ip адесси.
+"CREATE SERVER" відповідає за створення власного серверу за допомогою LAN Ip адесси.
 
 ```python
     def start_server():  
@@ -359,7 +378,8 @@ Support our team(pls) --> place your cvv here!
             server_thread = Thread(target = start_server)
                     
 ```
-    "JOIN" - допомагає приєднатися до існуючого серверу.
+
+"JOIN" - допомагає приєднатися до існуючого серверу.
  
 ```python
     def connect_to():
@@ -369,7 +389,8 @@ Support our team(pls) --> place your cvv here!
             client_socket.connect(("localhost", 8081))
             print("connect")
 ```
-    Пересилання даних відбувається за допомогою функції sending() та другого потоку always_recv()
+    
+Пересилання даних відбувається за допомогою функції sending().
 
 ```python
     def sending(row: int, cell: int, number: int, shot_type: int, turn: bool, kill_type: int, skill = 0) -> None :
@@ -383,9 +404,11 @@ Support our team(pls) --> place your cvv here!
 
         print("sending")
 
+```
 
+Обробка інформації відбувається за допомогою другого потоку always_recv()
     
-    
+```python
     def always_recv():
         global turn
         global run_battle
@@ -618,14 +641,18 @@ rocket= Skills(name_skill = "rocket",x= 430 , y= 15, price= 50, id= 4)
 Коли ставиться щит ваша клітина стає захищеною і на матриці змінюється на 3, при попаданні по щиту програватиметься звук і хід переходить супернику, що дає зрозуміти, що ви збили ворожий щит.
 
 ![Shield](/image/skills/shield.png)
-
+```python
+shield= Skills(name_skill = "shield",x= 550 ,y= 15, price= 40, id= 5) 
+```
 - Торпеда (Torpedo): 
 Торпеда проходить один ряд при знаходженні кораблю підриває його, якщо на шляху стоїть щит, то торбета зламає його
 
 ![Torpedo](/image/skills/torpedo.png)
 
-
- Перший хід обирається за функцією абсолютного рандома (якщо зелена лампа горить з лівої сторони біля вашого поля - хід за вами. Якщо навпаки й біля вашого поля горить червоне світно - хід заборонено -> чекайте завершення ходу супротивника).
+```python
+torpedo= Skills(name_skill = "torpedo",x= 670 , y= 15, price= 30, id= 6)
+```
+Перший хід обирається за функцією абсолютного рандома (якщо зелена лампа горить з лівої сторони біля вашого поля - хід за вами. Якщо навпаки йбіля вашого поля горить червоне світно - хід заборонено -> чекайте завершення ходу супротивника).
 
 Ігрова валюта "Поінти" (POINTS) відображаються з правого верхнього кутку вікна. Ця валюта начисляється вам під час битви за постріли, попадання й потоплення кораблів супротивника. За дану валюту гравцю надається можливість купувати й використовувати вище згадані здібності (спеціальну зброю) та одразу використовувати під час поточної битви. Після битви начислені поінти ОБНУЛЬОВУЮТЬСЯ. На то між ігрова валюта "Монети" зберігаються й після битви та залишаються задля покупок поза межами битви. Дані монети можливо отримати тільки за попадання та потоплення ворожих кораблів й відображатимуться тільки у вікні головного меню. 
 
