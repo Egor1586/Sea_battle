@@ -486,11 +486,22 @@ for event in pygame.event.get():
                     ship.y = ship.start_y
                 
             number += 1
+```
+    
+Для того щоб повернути кораблик потрібно натиснути праву кнопку миші, коли ви його переміщаєте на його місце.
+У коді це відбувається за допомогою даної провірки в якії при виконанні умов змінює положення коробля на протилежне.
+    
+```python
     if event.type == pygame.MOUSEBUTTONDOWN and not press[1] and not press[2]:
         for ship in ship_list:
             if ship.MOVE:
                 ship.LAST_DIR = ship.DIR
                 ship.DIR = not ship.DIR  
+```
+
+Щоб перейди на льодове поле треба, щоб усі кораблі стояли на полі. Це ми робимо за допомогою генератора котрий перевіряє параметр корабля ship.STAY.
+    
+```python
     if press[0]:
         button_ready_window = button_ready.checkPress(position = position, press = press)
         if button_ready_window and all(ship.STAY for ship in ship_list):
@@ -498,10 +509,6 @@ for event in pygame.event.get():
     
             if res == "BACK":
                 return "HOME"     
-    
-    if event.type == pygame.QUIT:
-        run_placement = False
-        pygame.quit()
 ```
 
 Після розтановки ВСІХ кораблей гравцю надається можливість перейти до етапу пошуку битви за клавішою "READY".
