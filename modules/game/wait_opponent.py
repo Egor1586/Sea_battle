@@ -17,6 +17,7 @@ def wait_opponent():
     bg = pygame.transform.scale(bg, [1400, 800])
 
     IP = get_local_ip()
+    IP = str(IP)
     LAN_IP = 0
 
     IP_TEXT = Text(x =50, y = 50, text = str(IP), text_size=45, color="Black")
@@ -89,19 +90,20 @@ def wait_opponent():
                 if create_server:
                     try:
                         server = True
-                        server_thread.start() 
                         print("Работаю одновременно с запуском сервера")
+                        server_thread.start() 
                     except:
                         print("CThd")
                     
                     if server:
+                        print("battle")
                         res = battle(IP)
                         if res == "BACK":
                             # отключить сервер
                             return res
 
                 if join_bool:
-                    LAN_IP = text
+                    LAN_IP = text                
                     text = ''
                     res = battle(LAN_IP)
                     if res == "BACK":

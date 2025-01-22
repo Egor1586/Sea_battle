@@ -210,10 +210,11 @@ def battle(IP):
 
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    def connect_to(IP = "localhost"):
+    def connect_to(IP):
         '''
         Пiд'єднується до сервера
         '''
+        print(IP)
         client_socket.connect((IP, 8081))
         print("connect")
     
@@ -1201,24 +1202,25 @@ def battle(IP):
     try:
         print("True")
         connect_to(IP)
-    except:
-        print("False")
-        return
+    except Exception as error:
+        print(error)
+
 
     data = json.dumps(player_map1)  
     client_socket.sendall(data.encode())  # Отправляем данные в байтовом формате
     print("sending map")
 
-    data = client_socket.recv(400)
+    data = client_socket.recv(1024)
+    
     player_map2 = json.loads(data.decode())
     print(player_map2)
+    turn_serv = client_socket.recv(10).decode()
 
-    turn = client_socket.recv(10).decode()
-    
-    if turn == "you":
+    if turn_serv == "1":
         turn = True
-    elif turn == "not":
-        turn = False
+    else:
+        turn =False
+
 
     for row in range(10):
         for cell in range(10):
@@ -1365,8 +1367,8 @@ def battle(IP):
                     
                     empty+= 1
 
-    server_thread = Thread(target = always_recv) 
-    server_thread.start()
+    # server_thread = Thread(target = always_recv) 
+    # server_thread.start()
 
     for ship in ship_list:
         ship.x += 3

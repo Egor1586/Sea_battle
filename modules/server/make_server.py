@@ -6,27 +6,30 @@ from ..game import get_local_ip
  
 def start_server():  
     IP = get_local_ip()
+    IP = str(IP)
+    print(IP, type(IP))
     # створили socket для передачи даних вказавши версію IP TCP тип з'єднання 
     with socket.socket(family = socket.AF_INET, type = socket.SOCK_STREAM) as server_socket: 
         # зв'язуємо socket з IP та портом 
-        server_socket.bind(("localhost", 8081)) #той айпішнік, який не дома у Тимофія 
+        server_socket.bind((IP, 8081)) #той айпішнік, який не дома у Тимофія 
 
         server_socket.listen(2) 
 
         try:
             client_socket1, adress1 = server_socket.accept() 
             print(client_socket1, adress1) 
-        except socket.timeout:
-            print("TIMEOUT 1")
-            return
+        except Exception as error:
+            print(error)
+            
+
  
 
         try:
             client_socket2, adress2 = server_socket.accept() 
             print(client_socket2, adress2) 
-        except socket.timeout:
-            print("TIMEOUT 2")
-            return
+        except Exception as error:
+            print(error)
+
  
         data1 = client_socket1.recv(4096)  # Преобразуем байты в строку 
         client_socket2.sendall(data1) 
