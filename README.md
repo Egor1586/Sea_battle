@@ -31,7 +31,7 @@
 
 - [Armory functional](#armory-functional)
 
-- [Credits](#made-by-egor-ivan-tima-ratmir)
+- [Credits](#credits)
 
 
 
@@ -515,6 +515,10 @@ for event in pygame.event.get():
 
 Вікно приєднання до онлайн гри з іншим користувачем. У даному вікні присутні дві подальші кнопки "CREATE SERVER" та "JOIN"
 
+З ліва показується ваш поточний LAN
+З права вам треба ввести LAN к котрому ви хочете підключитися
+Та потім вам потрібно натиснути кнопку Join
+
 ![waiting_for_opponent_background](/image/readme_images/wait_opponent_photo.png)
     
 "CREATE SERVER" відповідає за створення власного серверу за допомогою LAN Ip адесси.
@@ -711,7 +715,6 @@ for event in pygame.event.get():
 
     server_thread = Thread(target = always_recv) 
     server_thread.start()
-
 ```
 
 
@@ -742,6 +745,33 @@ for event in pygame.event.get():
 ![quasts_photo](/image/readme_images/tasks_photo.png)
 
 
+-Для відстеження прогресу у гру були додані монети чотирьох видів.
+
+-За влучення кораблями. Ці медалки медальки мають кілька ступенів прокачування від срібної до аметистової.
+
+![gold_shark_medalka](/image/achivement/gold_shark_medalka.png)
+
+-За вбивство кораблів, ткож має рівні.
+
+![ametyst_kraken_medalka](/image/achivement/ametyst_kraken_medalka.png)
+
+-За першу перемогу та поразку.
+
+![win](/image/achivement/win.png)
+
+![lose](/image/achivement/lose.png)
+
+-Після гри у вас з'явиться вікно, яке відобразить виграли або програли і покаже всі турбовані медалки.
+
+-Екран після перемоги.
+
+![win_photo](/image/readme_images/win_photo.png)
+
+-Екран після програшу
+
+![lose_photo](/image/readme_images/lose_photo.png)
+
+- [BACK TO GAME FUNCTIONALS](#game-functional)
 - [BACK](#different-information)
 # Armory functional
 - [BACK](#different-information)
@@ -1100,6 +1130,7 @@ if skill.id == 6:
 Ігрова валюта "Поінти" (POINTS) відображаються з правого верхнього кутку вікна. Ця валюта начисляється вам під час битви за постріли, попадання й потоплення кораблів супротивника. За дану валюту гравцю надається можливість купувати й використовувати вище згадані здібності (спеціальну зброю) та одразу використовувати під час поточної битви. Після битви начислені поінти ОБНУЛЬОВУЮТЬСЯ. На то між ігрова валюта "Монети" зберігаються й після битви та залишаються задля покупок поза межами битви. Дані монети можливо отримати тільки за попадання та потоплення ворожих кораблів й відображатимуться тільки у вікні головного меню. 
 
 - [BACK](#different-information)
+- [BACK TO GAME FUNCTIONALS](#game-functional)
 
 # Settings functional
 При натисканні кнопки settings ви перейдете на ось цей екран:
@@ -1111,18 +1142,38 @@ if skill.id == 6:
 - [Cursors](#cursors)
 - [Music](#music)
 
-- [BACK](#different-information)
+- [BACK](#game-functional)
 
 ### Sounds
+Тут ви можете регулювати фонову музику за допомогою елегантного повзунка гучності
+
+![sounds](/image/readme_images/settings_photo.png)
+
+```python
+
+if WIN_SOUND:
+                if event.type == pygame.MOUSEBUTTONUP and plus_rect.collidepoint(position) and press[0]:
+                    ON +=1
+                    pygame.mixer.music.set_volume(ON / 10)
+                    data["main"]["MUSICK"] = ON
+                    SOUND = data["main"]["MUSICK"]
+                elif event.type == pygame.MOUSEBUTTONUP and min_rect.collidepoint(position) and press[0]:
+                    ON -= 1
+                    pygame.mixer.music.set_volume(ON / 10)
+                    data["main"]["MUSICK"] = ON
+                    SOUND = data["main"]["MUSICK"]
+```
 
 
-
-- [BACK](#different-information)
+- [BACK](#settings-functional)
 
 ### Cursors
+Тут ви можете обрати собі курсор
+![cursor](/image/readme_images/cursors_photo.png)
 
 
-- [BACK](#different-information)
+
+- [BACK](#settings-functional)
 
 ### Music
 ![music screenshot](/image/)
@@ -1146,7 +1197,25 @@ def sound_path(name):
 ```
 > За допомогою вище описаного коду ми включаємо фонову музику
 За дефолтом там стоїть популярний трек - [cristhmas]
-- [BACK](#different-information)
+
+```python
+ 
+                if music1:
+                    play_music("c418", volume = ON)
+                if music2:
+                    play_music("new_year", volume = ON)
+                if music3:
+                    data["main"]["MUSICK_NAME"] = "trolo"
+                    play_music("trolo", volume = ON)
+                if music4:
+                    data["main"]["MUSICK_NAME"] = "rammstein"
+                    play_music("rammstein", volume = ON)
+```
+
+> За допомогою вище написаного коду ми модем обирати музику
+
+
+- [BACK](#settings-functional)
 
 # Quit functional
 Ця кнопка відповідає за вихід з гри
@@ -1159,5 +1228,34 @@ if event.type == pygame.QUIT:
 
 ```
 > За допомогою вище описаного коду ви можете вийти з гри
-## Made by Egor, Ivan, Tima, Ratmir
+
+- [BACK](#game-functional)
+# Credits
+-При написанні проекту ми зіштовхнулися з багатьма труднощами зі створенням cервера та ігрового процесу. Деякі завдання вирішувалися просто, а деякі складніші. Поступово вирішуючи їх, ми бачили результат. Ми попрацювали з новими технологіями і навчилися вирішувати складніші логічні завдання, вигадуючи нові алгоритми.
+
+
+- Egor(Coder):
+
+- Tymofii(Coder, Teamlead): 
+Це мій перший великий проект, та це мій перший великий проект у ролі Teamlead.
+Я багато чого дізнався з частини кодингу,
+по більшій частині це були труднощі з написанням та користуванням сервера та хіт боксами кораблів>
+Також я зіштовхнувся з труднощами у
+оптимізації роботи команди, розподілу ролей та постановкою дедлайнів.
+Для себе я виписав багато різних помилок як в ролі Teamlead так і в Coder. 
+Але як я люблю говорити - На помилках навчаються
+
+- Ivan(Designer, Coder):
+Я дізнався багато нового про
+функціонал бібліотеки pygame мови програмування python. 
+Також не є винятком модуль Pillow, за допомогою кого даний користувач 
+у своєму подальшому житті зможе користуватися та гратися із зображеннями в коді python.
+
+
+- Ratmir(Coder):
+
+
+Для кожного з нашої команди це був унікальний досвід. 
+Дякуємо всією командою нашому помічнику Миколаю Скрипнику!
+
 - [BACK](#different-information)
