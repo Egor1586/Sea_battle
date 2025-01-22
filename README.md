@@ -148,13 +148,13 @@ Support our team(pls) --> place your cvv here!
 # Game functional:
 - [BACK](#different-information)
 При відкриті програми для користувача випливає головне вікно "МЕНЮ", у якому є можливість вибору між кнопками:
-- PLAY
-- ARMORY
-- SETTINGS
-- QUIT
+- [PLAY](#button-play)
+- [ARMORY](#armory-functional)
+- [SETTINGS](#button-settings)
+- [QUIT](#button-quit)
 
 ![menu_background](/image/readme_images/menu_photo.png)
-
+# button play
 Кнопка "PLAY":
 - Натиснувши на дану кнопку, гравець переходить на наступний етап гри - вікно розташування кораблів. 
 
@@ -736,6 +736,12 @@ for event in pygame.event.get():
 ![point](/image/achievements/point.png)
 
 -Поінти можна використовувати для покупки здібностей, їх ціна вказана синізу. Коли ви купили зброю, ви можете використовувати її, затиснувши на ньому ліву клаптик миші і передавши на підлозі ворога або якщо це щит на своє. У місце де ви відімкнете ліву кнопку миші і станеться застосування можливості
+
+-Також у грі присутні квести, за виконання яких ви отримуєте 45 поінтів.
+
+![quasts_photo](/image/readme_images/tasks_photo.png)
+
+
 - [BACK](#different-information)
 # Armory functional
 - [BACK](#different-information)
@@ -830,6 +836,41 @@ class Skills():
 bomb= Skills(name_skill = "bomb",x= 70 ,y= 15 ,price= 60, id= 1) 
 ```
 
+Код знаходження бомбою кораблів.
+
+```python
+if skill.id == 1:
+    skill.count -= 1
+    skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
+    print("BomB")
+
+    first_cell = True
+    
+    bomb_list= [(row, cell), (row, cell- 1), (row, cell+ 1), (row- 1, cell), (row+ 1, cell), (row- 1, cell- 1), (row- 1, cell+ 1), (row+ 1, cell- 1), (row+ 1, cell+ 1)]
+    for coordinate in bomb_list:
+        if coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map2[coordinate[0]][coordinate[1]] == 1:
+            num = int(str(coordinate[0]) + str(coordinate[1]))
+            hit_list.append(pygame.Rect(row_list_enemy[num].x, row_list_enemy[num].y ,60, 60))   
+            player_map2[coordinate[0]][coordinate[1]] = 2
+            point += 10                   
+            row_list_enemy[num].CLOSE = True
+            
+            shot_type = new_finder(player_map2, coordinate[0], coordinate[1])
+            map(row_list_enemy, coordinate[0], coordinate[1], num, shot_type)
+
+            if first_cell:
+                swich_shark = True
+                swich_kraken = True
+                data_settings["quasts"]["kill_cell"] += 1
+                sound_hit.play()
+                sending(coordinate[0], coordinate[1], num, 1, 0, kill_type= shot_type, skill= skill.id)
+                first_cell = False
+
+            print(f'Попал по кораблику')
+            shot = False
+            turn = False
+```
+
 - Динаміт (Dynamite): 
 Динаміт підриває в чотирьох сторонах від себе, для цього створює dynamite_list який перебирає і находить на матриці клітини  з кораблем (на матриці корабель це цифра 1)
 
@@ -840,6 +881,40 @@ bomb= Skills(name_skill = "bomb",x= 70 ,y= 15 ,price= 60, id= 1)
 dynamite= Skills(name_skill = "dynamite",x= 190 ,y= 15, price= 40, id= 2) 
 ```
 
+Динаміт б'є чотири сторони навколо себе і перевіряє їх на наявність коробля.
+
+```python
+if skill.id == 1:
+    skill.count -= 1
+    skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
+    print(f"ENEMY FEILD {skill.id}, {row}, {cell}")
+    print("BomB")
+    first_cell = True
+    
+    bomb_list= [(row, cell), (row, cell- 1), (row, cell+ 1), (row- 1, cell), (row+ 1, cell), (row- 1, cell- 1), (row- 1, cell+ 1), (row+ 1, cell- 1), (row+ 1, cell+ 1)]
+    for coordinate in bomb_list:
+        if coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map2[coordinate[0]][coordinate[1]] == 1:
+            print(coordinate[0], coordinate[1], player_map2[coordinate[0]][coordinate[1]])
+            num = int(str(coordinate[0]) + str(coordinate[1]))
+            hit_list.append(pygame.Rect(row_list_enemy[num].x, row_list_enemy[num].y ,60, 60))   
+            player_map2[coordinate[0]][coordinate[1]] = 2
+            point += 10                   
+            row_list_enemy[num].CLOSE = True
+            
+            shot_type = new_finder(player_map2, coordinate[0], coordinate[1])
+            map(row_list_enemy, coordinate[0], coordinate[1], num, shot_type)
+            if first_cell:
+                swich_shark = True
+                swich_kraken = True
+                data_settings["quasts"]["kill_cell"] += 1
+                sound_hit.play()
+                sending(coordinate[0], coordinate[1], num, 1, 0, kill_type= shot_type, skill= skill.id)
+                first_cell = False
+            print(f'Попал по кораблику')
+            shot = False
+
+```
+
 - Радар (Radar): 
 Шукаючи кораблі в радіусі 1 блок, для цього створює radar_list який перебирає і знаходить на матриці клітини з кораблем (на матриці корабель це цифра 1) і відображає їх на екрані зі звуковим супроводом
 
@@ -848,7 +923,26 @@ dynamite= Skills(name_skill = "dynamite",x= 190 ,y= 15, price= 40, id= 2)
 ```python
 radar = Skills(name_skill= "Radar",x= 310, y= 15, price= 50, id= 3) 
 ```
+
+Радар знаходить кораблі і ставить на їхнє місце позначку.
+
+```python
+if skill.id == 3:
+    skill.count -= 1
+    skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
+    print(f"ENEMY FEILD {skill.id}, {row}, {cell}")
+    print("Radar")
+    radar_list= [(row, cell), (row, cell- 1), (row, cell+ 1), (row- 1, cell), (row+ 1, cell), (row- 1, cell- 1), (row- 1, cell+ 1), (row+ 1, cell- 1), (row+ 1, cell+ 1)]
+    for coordinate in radar_list:
+        if coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and (player_map2[coordinate[0]][coordinate[1]] == 1 or player_map2[coordinate[0]][coordinate[1]] == 3):
+            data_settings["quasts_do"]["quasts1"] += 1
+            radar_point_list.append(pygame.Rect(row_list_enemy[int(str(coordinate[0]) + str(coordinate[1]))].x, row_list_enemy[int(str(coordinate[0]) + str(coordinate[1]))].y, 60, 60))  
+    turn = False
     
+    sound_radar.play()                             
+    sending(0, 0, 100, 0, 1, kill_type = 10, skill= skill.id)                         
+```
+
 
 - Ракета (Rocket): 
 Шукає короблі в радіусі 2 клітинок, стріляє по першому знайденому кораблю
@@ -858,6 +952,44 @@ radar = Skills(name_skill= "Radar",x= 310, y= 15, price= 50, id= 3)
 ```python
 rocket= Skills(name_skill = "rocket",x= 430 , y= 15, price= 50, id= 4) 
 ```
+
+Коли гравець використовує ракету, то перебераються клітини в радіусі 2 клітин і при знаходженні корабля на його місці з'являється вибух.
+
+```python
+if skill.id == 4:
+    skill.count -= 1
+    skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
+    print(f"ENEMY FEILD {skill.id}, {row}, {cell}")
+    print("Rocet")
+    first_cell = True
+    
+    rocket_list= [(row, cell), (row, cell- 1), (row, cell+ 1), (row- 1, cell), (row+ 1, cell), (row- 1, cell- 1), (row- 1, cell+ 1), (row+ 1, cell- 1), (row+ 1, cell+ 1),
+                  (row + 2, cell), (row - 2, cell), (row, cell + 2), (row, cell - 2), 
+                  (row + 2, cell + 1), (row - 2, cell + 1), (row + 1, cell + 2), (row + 1, cell - 2),
+                  (row + 2, cell - 1), (row - 2, cell - 1), (row - 1, cell + 2), (row - 1, cell - 2)
+                  ]
+    
+    for coordinate in rocket_list:
+        if coordinate[0] >= 0 and coordinate[0] <= 9 and coordinate[1] >= 0 and coordinate[1] <= 9 and player_map2[coordinate[0]][coordinate[1]] == 1 and first_cell:
+            data_settings["quasts"]["kill_cell"] += 1
+            first_cell = False
+            print(coordinate[0], coordinate[1], player_map2[coordinate[0]][coordinate[1]])
+            num = int(str(coordinate[0]) + str(coordinate[1]))
+            hit_list.append(pygame.Rect(row_list_enemy[num].x, row_list_enemy[num].y ,60, 60))   
+            player_map2[coordinate[0]][coordinate[1]] = 2
+            point += 10                   
+            row_list_enemy[num].CLOSE = True
+            
+            shot_type = new_finder(player_map2, coordinate[0], coordinate[1])
+            if shot_type == 1:
+                data_settings["quasts_do"]["quasts5"] += 1
+            map(row_list_enemy, coordinate[0], coordinate[1], num, shot_type)
+            turn = False
+            swich_shark = True
+            swich_kraken = True
+            sound_hit.play()
+            sending(coordinate[0], coordinate[1], num, 1, 0, kill_type= shot_type, skill= skill.id)
+```
     
 - Щит (Shield): 
 Коли ставиться щит ваша клітина стає захищеною і на матриці змінюється на 3, при попаданні по щиту програватиметься звук і хід переходить супернику, що дає зрозуміти, що ви збили ворожий щит.
@@ -866,6 +998,32 @@ rocket= Skills(name_skill = "rocket",x= 430 , y= 15, price= 50, id= 4)
 ```python
 shield= Skills(name_skill = "shield",x= 550 ,y= 15, price= 40, id= 5) 
 ```
+
+Коли гравець ставить щит на своє поле, то перевіряється елсі там кораль, елсі та то ставиться щит, на матриці клітина змінюється на захищену.
+
+```python
+if item.collidepoint(position) and sq_list[0].collidepoint(position) and turn and skill.TAKE and not item.CLOSE:
+    if skill.id == 5:
+        skill.count -= 1
+        skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
+        print(f"ENEMY FEILD {skill.id}, {row}, {cell}")
+        print("Sild")
+        
+        if player_map1[row][cell] == 1:
+            swich_shark = True
+            swich_kraken = True
+            data_settings["quasts_do"]["quasts4"] += 1
+            data_settings["quasts"]["do_shield"] += 1
+            add_shield(row_list_player, number)
+            shield_list.append(pygame.Rect(item.x, item.y ,60, 60))
+            player_map1[row][cell] = 3
+            row_list_player[number].CLOSE = True
+            sound_put_shield.play()
+            sending(row, cell, number, 0, 1, kill_type = 10, skill= skill.id)
+    turn = False                          
+    shot = False   
+```
+           
 - Торпеда (Torpedo): 
 Торпеда проходить один ряд при знаходженні кораблю підриває його, якщо на шляху стоїть щит, то торбета зламає його
 
@@ -874,19 +1032,132 @@ shield= Skills(name_skill = "shield",x= 550 ,y= 15, price= 40, id= 5)
 ```python
 torpedo= Skills(name_skill = "torpedo",x= 670 , y= 15, price= 30, id= 6)
 ```
+
+Код який перебирає ряд на якому була використана торпеда і визначать потрапив гравець кораблем або щитом, якщо ряд виявився порожнім то хід переходить іншому гравцю.
+
+```python
+if skill.id == 6:
+    skill.count -= 1
+    skill.counter = Text(skill.x, skill.y, text= str(skill.count), color = "#D3D3D3") 
+    print(f"ENEMY FEILD {skill.id}, {row}, {cell}")
+    print("Topedo")
+    for i in range(0, 10):
+        print(player_map2[row][i], row, i)
+        if player_map2[row][i] == 1 and shot:
+            data_settings["quasts_do"]["quasts2"] += 1
+            swich_shark = True
+            swich_kraken = True
+            data_settings["quasts"]["kill_cell"] += 1
+            num = int(str(row) + str(i))
+            hit_list.append(pygame.Rect(row_list_enemy[num].x, row_list_enemy[num].y ,60, 60)) 
+            player_map2[row][i] = 2
+            point += 10                   
+            row_list_enemy[num].CLOSE = True
+            
+            shot_type = new_finder(player_map2, row, i)
+            map(row_list_enemy, row, i, num, shot_type)
+            sound_hit.play()
+            sending(row, i, num, 1, 0, kill_type= shot_type)
+            print(f'Попал по кораблику')
+            shot = False
+            
+            res = check_win()
+            print(res)
+            if res == "WIN":
+                turn = False
+                run_battle = False
+                back = win()
+                if back == "BACK":
+                    stop_thread = False
+                    return "BACK"
+                
+        if player_map2[row][i] == 3 and shot:
+            data_settings["quasts_do"]["quasts0"] = 0
+            data_settings["quasts_do"]["quasts3"] += 1
+            swich_shark = True
+            swich_kraken = True
+            data_settings["quasts"]["shield_cell"] += 1
+            num = int(str(row) + str(i)) 
+            player_map2[row][i] = 1
+            point += 5                 
+            
+            sound_shield.play()
+            turn = False
+            sending(row, i, num, 3, 1, kill_type= shot_type)
+            print(f'Попал по щиту')
+            shot = False
+                
+    if shot:
+        data_settings["quasts_do"]["quasts2"] = 0
+        data_settings["quasts_do"]["quasts0"] = 0
+        turn = False 
+        sound_miss.play()  
+        sending(0, 0, 100, 0, 1, kill_type = 10)
+
+```
 Перший хід обирається за функцією абсолютного рандома (якщо зелена лампа горить з лівої сторони біля вашого поля - хід за вами. Якщо навпаки йбіля вашого поля горить червоне світно - хід заборонено -> чекайте завершення ходу супротивника).
 
 Ігрова валюта "Поінти" (POINTS) відображаються з правого верхнього кутку вікна. Ця валюта начисляється вам під час битви за постріли, попадання й потоплення кораблів супротивника. За дану валюту гравцю надається можливість купувати й використовувати вище згадані здібності (спеціальну зброю) та одразу використовувати під час поточної битви. Після битви начислені поінти ОБНУЛЬОВУЮТЬСЯ. На то між ігрова валюта "Монети" зберігаються й після битви та залишаються задля покупок поза межами битви. Дані монети можливо отримати тільки за попадання та потоплення ворожих кораблів й відображатимуться тільки у вікні головного меню. 
 
 - [BACK](#different-information)
 
+# Settings functional
+При натисканні кнопки settings ви перейдете на ось цей екран:
+
+![settings_screen](/image/readme_images/settings_photo.png)
+
+Далі ви можете обрати:
+- [Sounds](#sounds) 
+- [Cursors](#cursors)
+- [Music](#music)
+
+- [BACK](#different-information)
+
+### Sounds
 
 
 
+- [BACK](#different-information)
+
+### Cursors
 
 
+- [BACK](#different-information)
 
+### Music
+![music screenshot](/image/)
 
+```python
+pygame.mixer.init()
 
+def play_music(name_music: str, volume: int):
+    '''
+    Ця функція програє музику та змінює гучність з нуля
+    '''
+    path_to_music = os.path.abspath(os.path.join(__file__, "..", "..", "..", "..", "sound", "music"))
+    music = (path_to_music + f"/{name_music}.mp3")
+    pygame.mixer.music.load(music)
+    pygame.mixer.music.play(loops=0, start=2.0, fade_ms=0)
+    pygame.mixer.music.set_volume(volume)
+
+def sound_path(name):
+    path = os.path.abspath(os.path.join(__file__, "..", "..", "..", "..", "sound", "sounds", f"{name}.mp3"))
+    return path
+```
+> За допомогою вище описаного коду ми включаємо фонову музику
+За дефолтом там стоїть популярний трек - [cristhmas]
+- [BACK](#different-information)
+
+# Quit functional
+Ця кнопка відповідає за вихід з гри
+```python
+
+if event.type == pygame.QUIT:
+                client_socket.close()
+                run_battle = False
+                pygame.quit()
+
+```
+> За допомогою вище описаного коду ви можете вийти з гри
 ## Made by Egor, Ivan, Tima, Ratmir
 - [BACK](#different-information)
