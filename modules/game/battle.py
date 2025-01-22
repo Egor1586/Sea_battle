@@ -1216,10 +1216,11 @@ def battle(IP):
     print(player_map2)
     turn_serv = client_socket.recv(10).decode()
 
-    if turn_serv == "1":
+    if turn_serv == "you":
         turn = True
-    else:
-        turn =False
+
+    if turn_serv == "not":
+        turn = False
 
     for row in range(10):
         for cell in range(10):
@@ -1366,8 +1367,8 @@ def battle(IP):
                     
                     empty+= 1
 
-    # server_thread = Thread(target = always_recv) 
-    # server_thread.start()
+    server_thread = Thread(target = always_recv) 
+    server_thread.start()
 
     for ship in ship_list:
         ship.x += 3
