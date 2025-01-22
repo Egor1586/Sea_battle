@@ -95,13 +95,15 @@ def wait_opponent():
                         print("CThd")
                     
                     if server:
-                        res = battle()
+                        res = battle(IP)
                         if res == "BACK":
                             # отключить сервер
                             return res
 
                 if join_bool:
-                    res = battle()
+                    LAN_IP = text
+                    text = ''
+                    res = battle(LAN_IP)
                     if res == "BACK":
                         # отключиться от сервера
                         return res

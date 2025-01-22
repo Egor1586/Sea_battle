@@ -15,7 +15,9 @@ data_settings = read_json(fd="settings.json")
 PLACE_LENGTH = data_settings["color"]["PLACE_LENGTH"]
 FPS = data_settings["main"]["FPS"]
 
-def battle():
+# IP = get_local_ip()
+
+def battle(IP):
 
     player_map2 = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -208,11 +210,11 @@ def battle():
 
     client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    def connect_to():
+    def connect_to(IP = "localhost"):
         '''
         Пiд'єднується до сервера
         '''
-        client_socket.connect(("localhost", 8081))
+        client_socket.connect((IP, 8081))
         print("connect")
     
     def sending(row: int, cell: int, number: int, shot_type: int, turn: bool, kill_type: int, skill = 0) -> None :
@@ -1198,7 +1200,7 @@ def battle():
 
     try:
         print("True")
-        connect_to()
+        connect_to(IP)
     except:
         print("False")
         return

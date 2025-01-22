@@ -2,8 +2,10 @@ import socket
 import random 
  
 from threading import Thread 
+from ..game import get_local_ip
  
 def start_server():  
+    IP = get_local_ip()
     # створили socket для передачи даних вказавши версію IP TCP тип з'єднання 
     with socket.socket(family = socket.AF_INET, type = socket.SOCK_STREAM) as server_socket: 
         # зв'язуємо socket з IP та портом 

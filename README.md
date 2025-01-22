@@ -303,6 +303,207 @@ Support our team(pls) --> place your cvv here!
 Користувач може розташовувати кораблі в різних напрямках (по горизонталі - за замовчуванням / по вертикалі - взявши корабель й натиснувши праву клавішу миши)
 Користувач НЕ може ставити повністю, або частично свої кораблі за кордонами обмеженого поля.
 
+Ця перевірка відповідає за запам'ятовування останньої координати коли корабель був узятий з поля.
+
+```python
+for event in pygame.event.get():            
+    if not press[1] and not press[2] and event.type == pygame.MOUSEBUTTONDOWN:
+        print("TAKE")  
+        number = 0
+        for item in row_list:
+            for ship in ship_list:
+                cell = number % 10
+                row = number // 10 
+                ship.take_ship(position= position)
+                
+                if item.collidepoint(position) and ship.WHERE and last:
+                    last_cell = cell
+                    last_row = row
+                    last = False
+                else:
+                    last = True
+            number += 1
+```   
+
+Після того як ми запам'ятали координати, залежно від розміру і положення коробля, скидаємо матрицю на порожні клітини звільняючи місце для інших кораблів.
+    
+```python
+    if event.type == pygame.MOUSEBUTTONDOWN and not press[1] and not press[2]:
+        number = 0
+        for item in row_list:
+            for ship in ship_list:
+                cell = number % 10
+                row = number // 10 
+                
+                if ship.rect.collidepoint(position) and ship.WHERE and last:
+                    if ship.count_length == 1:
+                        player_map1[last_row][last_cell] = 0
+                    if ship.count_length != 1 and ship.DIR:
+                        for i in range(ship.count_length):
+                            if last_cell + i < 10:
+                                player_map1[last_row][last_cell+i] = 0
+                    if ship.count_length != 1 and not ship.DIR:
+                        for i in range(ship.count_length):
+                            if last_row + i < 10:
+                                player_map1[last_row+i][last_cell] = 0
+            number += 1
+```
+
+Наступний блок коду відповідає за розтановку кораблів.
+
+Також перед тим як поставити кораблик на поле за допомогою функції check() ми перевіряємо чи не стоять кораблі надто близько один одному.
+
+```python 
+    def check(ID, rect):
+            for ship in ship_list:
+                if ship.ID != ID:  # не проверяем столкновение с самим собой
+                    if rect.colliderect(ship.rect):
+                        return False
+
+            else:
+                return True
+```
+
+Коли перевірку пройдено ми можемо перейти до того щоб привласнити кораблю свою клітину якщо, він стоїть у межах поля і має вільні клітини
+    
+```python 
+    if event.type == pygame.MOUSEBUTTONUP and not press[1] and not press[2]:            
+        number = 0
+        for item in row_list:
+            for ship in ship_list:
+                if item.collidepoint(position) and ship.MOVE and sq_list[0].collidepoint(position):
+                    cell = number % 10
+                    row = number // 10               
+                    #перевірка кораблів та клітинок при горизонтальному положенні кораблика.
+                    if ship.DIR and cell + ship.count_length <= 10 and all(player_map1[row][cell + i] == 0 for i in range(ship.count_length)) and not ship.WHERE:
+                        place = check(ship.ID, ship.rect)
+                        if place:
+                            ship.STAY = True 
+                            ship.x = item.x
+                            ship.y = item.y
+                            for i in range(ship.count_length):
+                                player_map1[row][cell+i] = 1
+                                print(player_map1[row][cell+i])  
+                        else:
+                            ship.STAY = False 
+                            ship.DIR =  True
+                            ship.x = ship.start_x
+                            ship.y = ship.start_y                  
+                    elif ship.DIR and cell + ship.count_length <= 10 and all(player_map1[row][cell + i] == 0 for i in range(ship.count_length)) and ship.WHERE:
+                        place = check(ship.ID, ship.rect)
+                        if place:
+                            ship.STAY = True
+                            ship.x = item.x
+                            ship.y = item.y
+                            for i in range(ship.count_length):
+                                player_map1[row][cell+i] = 1
+                        else:
+                            ship.STAY = False 
+                            ship.DIR =  True
+                            ship.x = ship.start_x
+                            ship.y = ship.start_y
+                    elif ship.DIR and cell + ship.count_length <= 10 and any(player_map1[row][cell + i] == 1 for i in range(ship.count_length)) and not ship.WHERE: 
+                        ship.STAY = False 
+                        ship.DIR =  True
+                        ship.x = ship.start_x
+                        ship.y = ship.start_y 
+                    elif ship.DIR and cell + ship.count_length <= 10 and any(player_map1[row][cell + i] == 1 for i in range(ship.count_length)) and ship.WHERE:  
+                        ship.STAY = False                 
+                        ship.DIR =  True
+                        ship.x = ship.start_x
+                        ship.y = ship.start_y                   
+                                         
+                    #умова, при якій кораблик повертається на стартові координати, якщо кораблик виходить за рамки поля.
+                    elif ship.DIR and cell + ship.count_length > 10 and not ship.WHERE: 
+                        ship.STAY = False                    
+                        ship.DIR =  True
+                        ship.x = ship.start_x
+                        ship.y = ship.start_y
+                        
+                    
+                    elif ship.DIR and cell + ship.count_length > 10 and  ship.WHERE:
+                        ship.STAY = False 
+                        ship.DIR =  True
+                        ship.x = ship.start_x
+                        ship.y = ship.start_y
+                    #перевірка кораблів та клітинок при горизонтальному положенні кораблика.
+                    if not ship.DIR and row + ship.count_length <= 10 and all(player_map1[row + i][cell] == 0 for i in range(ship.count_length)) and not ship.WHERE:
+                        place = check(ship.ID, ship.rect)
+                        if place:
+                            ship.STAY = True
+                            ship.x = item.x
+                            ship.y = item.y
+                            for i in range(ship.count_length):
+                                player_map1[row+i][cell] = 1  
+                        else:
+                            ship.STAY = False 
+                            ship.DIR =  True
+                            ship.x = ship.start_x
+                            ship.y = ship.start_y 
+                    elif not ship.DIR and row + ship.count_length <= 10 and all(player_map1[row + i][cell] == 0 for i in range(ship.count_length)) and ship.WHERE:
+                        place = check(ship.ID, ship.rect)
+                        if place:
+                            ship.STAY = True
+                            ship.x = item.x
+                            ship.y = item.y
+                            for i in range(ship.count_length):
+                                player_map1[row+i][cell] = 1
+                        else:
+                            ship.STAY = False 
+                            ship.DIR =  True
+                            ship.x = ship.start_x
+                            ship.y = ship.start_y
+                    elif not ship.DIR and row + ship.count_length <= 10 and any(player_map1[row + i][cell] == 1 for i in range(ship.count_length)) and not ship.WHERE: 
+                        ship.STAY = False 
+                        ship.DIR =  True
+                        ship.x = ship.start_x
+                        ship.y = ship.start_y 
+                    elif not ship.DIR and row + ship.count_length <= 10 and any(player_map1[row+1][cell] == 1 for i in range(ship.count_length)) and ship.WHERE: 
+                        ship.STAY = False                    
+                        ship.DIR =  True
+                        ship.x = ship.start_x
+                        ship.y = ship.start_y                   
+                                         
+                    #умова, при якій кораблик повертається на стартові координати, якщо кораблик виходить за рамки поля.
+                    elif not ship.DIR and row + ship.count_length > 10 and not ship.WHERE:
+                        ship.STAY = False                       
+                        ship.DIR =  True
+                        ship.x = ship.start_x
+                        ship.y = ship.start_y
+                        
+                    
+                    elif not ship.DIR and row + ship.count_length > 10 and ship.WHERE:
+                        ship.STAY = False                      
+                        ship.DIR =  True
+                        ship.x = ship.start_x
+                        ship.y = ship.start_y
+                                                    
+                #умова, при якій наший кораблик повертається на стартові координати, якщо його ставлять за рамками поля.
+                elif ship.MOVE and not sq_list[0].collidepoint(position) and not press[2]:
+                    ship.STAY = False       
+                    ship.DIR =  True
+                    ship.x = ship.start_x
+                    ship.y = ship.start_y
+                
+            number += 1
+    if event.type == pygame.MOUSEBUTTONDOWN and not press[1] and not press[2]:
+        for ship in ship_list:
+            if ship.MOVE:
+                ship.LAST_DIR = ship.DIR
+                ship.DIR = not ship.DIR  
+    if press[0]:
+        button_ready_window = button_ready.checkPress(position = position, press = press)
+        if button_ready_window and all(ship.STAY for ship in ship_list):
+            res = wait_opponent()
+    
+            if res == "BACK":
+                return "HOME"     
+    
+    if event.type == pygame.QUIT:
+        run_placement = False
+        pygame.quit()
+```
+
 Після розтановки ВСІХ кораблей гравцю надається можливість перейти до етапу пошуку битви за клавішою "READY".
 
 Вікно приєднання до онлайн гри з іншим користувачем. У даному вікні присутні дві подальші кнопки "CREATE SERVER" та "JOIN"
