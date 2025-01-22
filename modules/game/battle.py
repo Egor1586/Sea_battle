@@ -1221,7 +1221,6 @@ def battle(IP):
     else:
         turn =False
 
-
     for row in range(10):
         for cell in range(10):
             row_list_player.append(RectBetter(x1, y1, 60, 60, False))
