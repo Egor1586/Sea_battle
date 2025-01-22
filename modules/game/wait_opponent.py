@@ -11,10 +11,25 @@ MAIN_WINDOW_COLOR = data["main"]["MAIN_WINDOW_COLOR"]
 FPS =  data["main"]["FPS"]
 
 
-def wait_opponent():
+def wait_opponent():   
     run_wait_opponent = True
     bg = pygame.image.load(os.path.abspath(os.path.join(__file__ + "..", "..", "..",  ".." ,"image", "bg", "wait_for_opponent_bg.png")))
     bg = pygame.transform.scale(bg, [1400, 800])
+
+    IP = get_local_ip()
+    LAN_IP = 0
+
+    IP_TEXT = Text(x =50, y = 50, text = str(IP), text_size=45, color="Black")
+
+    input_box = pygame.Rect(850, 150, 400, 50)
+    color_inactive = pygame.Color('white')
+    color_active = pygame.Color('blue')
+    color = color_inactive
+    active = False
+    text = ''
+
+    font = pygame.font.Font(None, 36)
+    WHITE = (255, 255, 255)
 
     server = True
 
@@ -26,6 +41,16 @@ def wait_opponent():
 
         join.button_draw(screen = screen)
         create.button_draw(screen= screen)
+
+        search.text_draw(screen = screen)
+
+        IP_TEXT.text_draw(screen = screen)
+
+        txt_surface = font.render(text, True, WHITE)
+        width = max(200, txt_surface.get_width() + 10)
+        input_box.w = width
+        screen.blit(txt_surface, (input_box.x + 5, input_box.y + 5))
+        pygame.draw.rect(screen, color, input_box, 2)
             
         # print(clock.get_fps())
         
@@ -33,7 +58,30 @@ def wait_opponent():
         clock.tick(FPS)
 
         for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                # Если пользователь нажимает на текстовое поле
+                if input_box.collidepoint(event.pos):
+                    active = not active
+                else:
+                    active = False
+                
+                if active:
+                    color = color_active
+                else: 
+                    color_inactive
+                
+            if event.type == pygame.KEYDOWN:
+                if active:
+                    if event.key == pygame.K_RETURN:
+                        LAN_IP = text  # Вывод текста в консоль
+                        text = ''  # Очищаем текстовое поле
+                    elif event.key == pygame.K_BACKSPACE:
+                        text = text[:-1]
+                    else:
+                        text += event.unicode
+            
             if event.type == pygame.MOUSEBUTTONUP and press[0]:
+
                 join_bool = join.checkPress(position = position, press = press)
                 
                 create_server = create.checkPress(position = position, press = press)

@@ -9,6 +9,7 @@
 
 import pygame
 import os
+import socket
 
 from .bg_music import swich
 from .read_json import read_json
@@ -24,6 +25,11 @@ BUTTON_PLACEMENT_WIDTH = data["button"]["PLACEMENT_WIDTH"]
 BUTTON_PLACEMENT_HEIGHT = data["button"]["PLACEMENT_HEIGHT"]
 BUTTON_DARKER_COLOR = data["button"]["DARKER_COLOR"]
 MAIN_WINDOW_COLOR = data["main"]["MAIN_WINDOW_COLOR"]
+
+def get_local_ip():
+        hostname = socket.gethostname()
+        local_ip = socket.gethostbyname(hostname)
+        return local_ip
 
 #клас Кнопки (+ її хітбокс "rect")
 class Button():
@@ -214,6 +220,8 @@ price_missile = Text(x = 893, y = 560, text = "50", text_size=30, color="Black")
 price_shield = Text(x = 1155, y = 560, text = "40", text_size=30, color="Black")
 price_bomb= Text(x = 100, y = 560, text = "60", text_size=30, color="Black")
 price_torpedo = Text(x = 100, y = 560, text = "30", text_size=30, color="Black")
+
+search = Text(x = 750, y = 100, text = "Введите LAN IP:", text_size=30, color="Black")
 
 
 skills_info_text = [text_dynamite, text_bomb, text_missile, text_radar, text_shield, text_torpedo, text_missile2, text_radar2]

@@ -20,15 +20,10 @@ play_music(f"{MUSIC_NAME}", volume = 0.1)
 
 def menu():
     run_menu = True
-
-    def get_local_ip():
-        hostname = socket.gethostname()
-        local_ip = socket.gethostbyname(hostname)
-        return local_ip
     
-    data["lan_ip"] = get_local_ip()
+    IP = get_local_ip()
 
-    IP_TEXT = Text(x =120, y = 550, text = str(data["lan_ip"]), text_size=45, color="Black")
+    IP_TEXT = Text(x =120, y = 550, text = str(IP), text_size=45, color="Black")
 
     im_coin = pygame.image.load(
     os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "coins", "coin_silver.png"))
