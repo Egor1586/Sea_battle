@@ -18,6 +18,8 @@ MUSIC_NAME = str(data["main"]["MUSIC_NAME"])
 
 play_music(f"{MUSIC_NAME}", volume = 0.1)
 
+pygame.display.set_icon(pygame.image.load(os.path.join(__file__, "..", "..", "..", "image", "readme_images", "game_icon.png")))
+
 def menu():
     run_menu = True
     

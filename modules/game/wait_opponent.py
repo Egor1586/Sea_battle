@@ -13,7 +13,7 @@ FPS =  data["main"]["FPS"]
 
 def wait_opponent():   
     run_wait_opponent = True
-    bg = pygame.image.load(os.path.abspath(os.path.join(__file__ + "..", "..", "..",  ".." ,"image", "bg", "wait_for_opponent_bg.png")))
+    bg = pygame.image.load(os.path.abspath(os.path.join(__file__ + "..", "..", "..",  ".." ,"image", "readme_images", ".png")))
     bg = pygame.transform.scale(bg, [1400, 800])
 
     IP = get_local_ip()
@@ -105,10 +105,11 @@ def wait_opponent():
                 if join_bool:
                     LAN_IP = text                
                     text = ''
-                    res = battle(LAN_IP)
-                    if res == "BACK":
-                        # отключиться от сервера
-                        return res
+                    if LAN_IP:
+                        res = battle(LAN_IP)
+                        if res == "BACK":
+                            # отключиться от сервера
+                            return res
             
             if event.type == pygame.QUIT:
                 run_wait_opponent = False

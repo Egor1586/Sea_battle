@@ -86,7 +86,7 @@ def battle(IP):
     quasts6 = False
 
     quasts_do_list =[quasts1, quasts2, quasts3, quasts4, quasts5, quasts6]
-
+    
     image_point = pygame.image.load(
     os.path.abspath(os.path.join(__file__, "..", "..", "..", "image", "achievements", "point.png"))
     )
@@ -1202,8 +1202,9 @@ def battle(IP):
     try:
         print("True")
         connect_to(IP)
-    except Exception as error:
+    except Exception as error:         
         print(error)
+        return
 
 
     data = json.dumps(player_map1)  
