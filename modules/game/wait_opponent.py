@@ -13,7 +13,7 @@ FPS =  data["main"]["FPS"]
 
 def wait_opponent():   
     run_wait_opponent = True
-    bg = pygame.image.load(os.path.abspath(os.path.join(__file__ + "..", "..", "..",  ".." ,"image", "readme_images", ".png")))
+    bg = pygame.image.load(os.path.abspath(os.path.join(__file__ + "..", "..", "..",  ".." ,"image", "bg", "wait_for_opponent_bg.png")))
     bg = pygame.transform.scale(bg, [1400, 800])
 
     IP = get_local_ip()
