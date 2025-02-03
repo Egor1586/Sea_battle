@@ -749,17 +749,17 @@ for event in pygame.event.get():
 
 -За влучення кораблями. Ці медалки медальки мають кілька ступенів прокачування від срібної до аметистової.
 
-![gold_shark_medalka](/image/achivement/gold_shark_medalka.png)
+![gold_shark_medalka](/image/achivements/gold_shark_medalka.png)
 
 -За вбивство кораблів, ткож має рівні.
 
-![ametyst_kraken_medalka](/image/achivement/ametyst_kraken_medalka.png)
+![ametyst_kraken_medalka](/image/achivements/ametyst_kraken_medalka.png)
 
 -За першу перемогу та поразку.
 
-![win](/image/achivement/win.png)
+![win](/image/achivements/win.png)
 
-![lose](/image/achivement/lose.png)
+![lose](/image/achivements/lose.png)
 
 -Після гри у вас з'явиться вікно, яке відобразить виграли або програли і покаже всі турбовані медалки.
 
